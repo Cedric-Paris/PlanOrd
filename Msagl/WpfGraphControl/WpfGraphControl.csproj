@@ -97,6 +97,7 @@
     <Compile Include="GvMouseEventArgs.cs" />
     <Compile Include="IInvalidatable.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="PlanOrdOverlay\PlanOrdGraphViewer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -133,9 +134,7 @@
       <Name>Msagl</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PlanOrdOverlay\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

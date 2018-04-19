@@ -108,14 +108,14 @@ namespace Microsoft.Msagl.WpfGraphControl {
         static double _dpiX;
         static int _dpiY;
 
-        readonly Dictionary<DrawingObject, IViewerObject> drawingObjectsToIViewerObjects =
+        protected readonly Dictionary<DrawingObject, IViewerObject> drawingObjectsToIViewerObjects =
             new Dictionary<DrawingObject, IViewerObject>();
 
         FrameworkElement _rectToFillGraphBackground;
         System.Windows.Shapes.Rectangle _rectToFillCanvas;
 
        
-        GeometryGraph GeomGraph {
+        protected GeometryGraph GeomGraph {
             get { return _drawingGraph.GeometryGraph; }
         }
 
@@ -125,6 +125,14 @@ namespace Microsoft.Msagl.WpfGraphControl {
         public Canvas GraphCanvas {
             get { return _graphCanvas; }
         }
+
+        /// <summary>
+        /// Rectangle used to represent the background of the graph in the Canvas
+        /// </summary>
+        protected System.Windows.Shapes.Rectangle RectToFillGraphBackground {
+            get { return _rectToFillGraphBackground as System.Windows.Shapes.Rectangle; }
+        }
+        
 
         public GraphViewer() {
             //LargeGraphNodeCountThreshold = 0;
@@ -277,7 +285,7 @@ namespace Microsoft.Msagl.WpfGraphControl {
                 MouseDown(this, CreateMouseEventArgs(e));            
         }
 
-        void GraphCanvasMouseWheel(object sender, MouseWheelEventArgs e) {
+        protected virtual void GraphCanvasMouseWheel(object sender, MouseWheelEventArgs e) {
             if (e.Delta != 0) {
                 const double zoomFractionLocal = 0.9;
                 var zoomInc = e.Delta < 0 ? zoomFractionLocal : 1.0/zoomFractionLocal;
@@ -314,7 +322,7 @@ namespace Microsoft.Msagl.WpfGraphControl {
         }
 
         
-        void GraphCanvasMouseMove(object sender, MouseEventArgs e) {
+        protected virtual void GraphCanvasMouseMove(object sender, MouseEventArgs e) {
             if (MouseMove != null)
                 MouseMove(this, CreateMouseEventArgs(e));
 
@@ -484,9 +492,6 @@ namespace Microsoft.Msagl.WpfGraphControl {
             
             SetTransformFromTwoPoints(e.GetPosition((FrameworkElement) _graphCanvas.Parent),
                     _mouseDownPositionInGraph);
-
-            if (ViewChangeEvent != null)
-                 ViewChangeEvent(null, null);
         }
 
 //        [System.Runtime.InteropServices.DllImportAttribute("user32.dll", EntryPoint = "SetCursorPos")]
@@ -1097,7 +1102,7 @@ namespace Microsoft.Msagl.WpfGraphControl {
         }
 
 
-        void SetTransform(double scale, double dx, double dy) {
+        protected virtual void SetTransform(double scale, double dx, double dy) {
             if (ScaleIsOutOfRange(scale)) return;
             _graphCanvas.RenderTransform = new MatrixTransform(scale, 0, 0, -scale, dx, dy);
             if (ViewChangeEvent != null)

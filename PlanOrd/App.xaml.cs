@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using PlanOrd.View;
 
 namespace PlanOrd
 {
@@ -9,7 +10,7 @@ namespace PlanOrd
     {
         private void Start(object sender, StartupEventArgs e)
         {
-            MainWindow wnd = new MainWindow();
+            var wnd = new MaquetteWindow();
             wnd.Show();
         }
 

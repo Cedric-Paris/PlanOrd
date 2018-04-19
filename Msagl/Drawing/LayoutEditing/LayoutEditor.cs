@@ -31,6 +31,7 @@ namespace Microsoft.Msagl.Drawing {
             new Dictionary<IViewerObject, VoidDelegate>();
 
         readonly Set<IViewerObject> dragGroup = new Set<IViewerObject>();
+        public IList<IViewerObject> ObjectsSelectedForDrag { get { return new List<IViewerObject>(dragGroup); } }
 
         readonly GeometryGraphEditor geomGraphEditor = new GeometryGraphEditor();
         Graph graph;
@@ -561,7 +562,7 @@ namespace Microsoft.Msagl.Drawing {
             }
         }
 
-        void SelectObjectForDragging(IViewerObject obj) {
+        public void SelectObjectForDragging(IViewerObject obj) {
             if (obj.MarkedForDragging == false) {
                 obj.MarkedForDragging = true;
                 dragGroup.Insert(obj);
@@ -569,7 +570,7 @@ namespace Microsoft.Msagl.Drawing {
             }
         }
 
-        void UnselectObjectForDragging(IViewerObject obj) {
+        public void UnselectObjectForDragging(IViewerObject obj) {
             UnselectWithoutRemovingFromDragGroup(obj);
             dragGroup.Remove(obj);
         }
