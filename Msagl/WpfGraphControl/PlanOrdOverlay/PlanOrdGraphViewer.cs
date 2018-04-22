@@ -33,9 +33,10 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         /// <param name="panelContainer"></param>
         /// <param name="verticalScrollBar"></param>
         /// <param name="horizontalScrollBar"></param>
-        public void Initialize(Panel panelContainer, ScrollBar verticalScrollBar, ScrollBar horizontalScrollBar)
+        public void Initialize(Panel panelContainer, ScrollBar verticalScrollBar, ScrollBar horizontalScrollBar, DrawingNodeToFrameworkElement drawingNodeToFrameworkEl = null)
         {
             BindToPanel(panelContainer);
+            DrawingNodeToFrameworkEl = drawingNodeToFrameworkEl;
             this.verticalScrollBar = verticalScrollBar;
             this.horizontalScrollBar = horizontalScrollBar;
             this.panelContainer = panelContainer;

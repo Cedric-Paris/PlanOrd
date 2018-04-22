@@ -133,6 +133,17 @@ namespace Microsoft.Msagl.WpfGraphControl {
             get { return _rectToFillGraphBackground as System.Windows.Shapes.Rectangle; }
         }
         
+        /// <summary>
+        /// Delegate used to convert Node to FrameworkElement (graphical node)
+        /// </summary>
+        /// <param name="drawingNode">Node to convert</param>
+        /// <returns>FrameworkElement</returns>
+        public delegate FrameworkElement DrawingNodeToFrameworkElement(Microsoft.Msagl.Drawing.Node drawingNode);
+
+        /// <summary>
+        /// If set, this delegate will be used to create the nodes of the graph
+        /// </summary>
+        protected DrawingNodeToFrameworkElement DrawingNodeToFrameworkEl {private get; set; }
 
         public GraphViewer() {
             //LargeGraphNodeCountThreshold = 0;
@@ -1569,10 +1580,14 @@ namespace Microsoft.Msagl.WpfGraphControl {
 
         FrameworkElement CreateDefaultFrameworkElementForDrawingObject(DrawingObject drawingObject) {
             lock (this) {
-                var textBlock = CreateTextBlockForDrawingObj(drawingObject);
-                if (textBlock != null)
-                    drawingObjectsToFrameworkElements[drawingObject] = textBlock;
-                return textBlock;
+                FrameworkElement frameworkElem = null;
+                if (drawingObject is Microsoft.Msagl.Drawing.Node && DrawingNodeToFrameworkEl != null)
+                    frameworkElem = DrawingNodeToFrameworkEl(drawingObject as Microsoft.Msagl.Drawing.Node);
+                else
+                    frameworkElem = CreateTextBlockForDrawingObj(drawingObject);
+                if (frameworkElem != null)
+                    drawingObjectsToFrameworkElements[drawingObject] = frameworkElem;
+                return frameworkElem;
             }
         }
 

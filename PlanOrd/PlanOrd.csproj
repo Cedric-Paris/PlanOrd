@@ -61,9 +61,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\Plan.cs" />
     <Compile Include="Services\IPlanProvider.cs" />
+    <Compile Include="ViewModel\ViewModel.cs" />
     <Compile Include="View\MaquetteWindow.xaml.cs">
       <DependentUpon>MaquetteWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PlanNodeView.xaml.cs">
+      <DependentUpon>PlanNodeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\PlanOrdGraphControl.xaml.cs">
       <DependentUpon>PlanOrdGraphControl.xaml</DependentUpon>
@@ -84,6 +89,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\MaquetteWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PlanNodeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

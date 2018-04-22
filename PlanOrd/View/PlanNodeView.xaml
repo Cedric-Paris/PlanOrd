@@ -1,0 +1,23 @@
+﻿<DockPanel x:Class="PlanOrd.View.PlanNodeView"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:viewres="clr-namespace:PlanOrd.View.Resources"
+           xmlns:viewmodel="clr-namespace:PlanOrd.ViewModel"
+           mc:Ignorable="d"
+           d:DataContext="{d:DesignInstance Type=viewmodel:PlanNodeViewModel, IsDesignTimeCreatable=False}">
+    <WrapPanel DockPanel.Dock="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,-8,0,0">
+        <WrapPanel.LayoutTransform>
+            <ScaleTransform
+            CenterX="0" CenterY="0"
+            ScaleX="0.5"
+            ScaleY="0.5"
+        />
+        </WrapPanel.LayoutTransform>
+        <viewres:BadgeText Background="Red" Foreground="White" Text="12"/>
+        <viewres:BadgeText Background="Blue" Foreground="White" Text="12"/>
+        <viewres:BadgeText Background="Green" Foreground="White" Text="12"/>
+    </WrapPanel>
+    <TextBlock x:Name="labelTextBlock" Text="Label temporaire (->binding)" FontSize="12"/>
+</DockPanel>

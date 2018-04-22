@@ -1,6 +1,5 @@
 ﻿using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay;
-using PlanOrd.Model;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,23 +10,22 @@ namespace PlanOrd.View
     /// </summary>
     public partial class PlanOrdGraphControl : UserControl
     {
-        /*public static readonly DependencyProperty PlanOrdGraphProperty =
-            DependencyProperty.Register("PlanOrdGraph", typeof(PlanGraph), typeof(PlanOrdGraphControl), null);
+        public static readonly DependencyProperty GraphProperty =
+            DependencyProperty.Register("Graph", typeof(Graph), typeof(PlanOrdGraphControl), null);
 
-        public PlanGraph PlanGraph
+        public Graph Graph
         {
-            get { return (PlanGraph)GetValue(PlanOrdGraphProperty); }
+            get { return (Graph)GetValue(GraphProperty); }
             set
             {
-                SetValue(PlanOrdGraphProperty, value);
-                currentPlanGraph = value;
+                SetValue(GraphProperty, value);
+                graph = value;
                 isGraphOutdated = true;
                 DisplayGraph();
             }
-        }*/
+        }
 
         private PlanOrdGraphViewer graphViewer;
-        //private PlanGraph currentPlanGraph;
         private Graph graph;
         private bool isGraphOutdated = false;
 
@@ -39,7 +37,7 @@ namespace PlanOrd.View
         {
             InitializeComponent();
             graphViewer = new PlanOrdGraphViewer();
-            graphViewer.Initialize(containerDockPanel, verticalScrollBar, horizontalScrollBar);
+            graphViewer.Initialize(containerDockPanel, verticalScrollBar, horizontalScrollBar, NodeToFrameworkElement);
         }
 
         /// <summary>
@@ -51,20 +49,21 @@ namespace PlanOrd.View
                 return;
             isGraphOutdated = false;
 
-            /*graph = new Graph();
-            foreach(var nodePair in currentPlanGraph.Nodes)
-            {
-                Node n = graph.AddNode(nodePair.Key.ToString());
-                n.UserData = nodePair.Value;
-                n.LabelText = nodePair.Value.Label;
-                foreach(var childNodePair in nodePair.Value.Children)
-                {
-                    Edge e = graph.AddEdge(nodePair.Key.ToString(), childNodePair.Key.ToString());
-                }
-            }
-
             //Render graph
-            graphViewer.Graph = graph;*/
+            graphViewer.Graph = graph;
+        }
+
+        private PlanNodeView NodeToFrameworkElement(Node node)
+        {
+            /*PlanNodeViewModel planNode = node.UserData as PlanNodeViewModel;
+            if (planNode == null)
+                return null;*/
+
+            var planNodeView = new PlanNodeView(null);
+            planNodeView.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            planNodeView.Width = planNodeView.DesiredSize.Width;
+            planNodeView.Height = planNodeView.DesiredSize.Height;
+            return planNodeView;
         }
 
         /// <summary>
@@ -79,7 +78,7 @@ namespace PlanOrd.View
 
             //-- TEMPORARY --
             graph = new Graph();
-            graph.Attr.BackgroundColor = Color.Green;
+            //graph.Attr.BackgroundColor = Color.Green;
 
             graph.AddEdge("4244678324", "1", "3306765570");
             graph.AddEdge("3306765570", "2", "3306795361");
