@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace PlanOrd.Model
 {
@@ -21,13 +17,16 @@ namespace PlanOrd.Model
         /// <summary>
         /// Créer un arc entre deux noeuds (existants) du graphe
         /// </summary>
-        /// <param name="sourceId">le noeud source qui sera le père du noeud cible</param>
-        /// <param name="targetId">le noeud cible qui sera fils du noeud source</param>
+        /// <param name="sourceId">Noeud source qui sera le pere du noeud cible</param>
+        /// <param name="targetId">Noeud cible qui sera fils du noeud source</param>
         public void CreateArc(int sourceId, int targetId)
         {
-
-            //a compléter
-
+            PlanNode source, target;
+            if (Nodes.TryGetValue(sourceId, out source) && Nodes.TryGetValue(targetId, out target))
+            {
+                target.Fathers.Add(source.Id, source);
+                source.Children.Add(target.Id, target);
+            }
         }
     }
 }

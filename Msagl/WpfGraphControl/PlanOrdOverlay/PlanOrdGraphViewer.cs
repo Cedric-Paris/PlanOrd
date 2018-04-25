@@ -20,6 +20,7 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
     public class PlanOrdGraphViewer : GraphViewer
     {
         private const double ZoomPower = 0.9;
+
         private ScrollBar verticalScrollBar;
         private ScrollBar horizontalScrollBar;
         private Panel panelContainer;
@@ -30,9 +31,10 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         /// <summary>
         /// Initialize le viewer. Doit être appele avant toute interaction utilisateur
         /// </summary>
-        /// <param name="panelContainer"></param>
-        /// <param name="verticalScrollBar"></param>
-        /// <param name="horizontalScrollBar"></param>
+        /// <param name="panelContainer">Panel qui contiendra le graphe</param>
+        /// <param name="verticalScrollBar">Scrollbar utilisee pour scroller le graph verticalement</param>
+        /// <param name="horizontalScrollBar">Scrollbar utilisee pour scroller le graph horizontalement</param>
+        /// <param name="drawingNodeToFrameworkEl">Delegate permettant de convertir un Drawing.Node en objet graphique Wpf</param>
         public void Initialize(Panel panelContainer, ScrollBar verticalScrollBar, ScrollBar horizontalScrollBar, DrawingNodeToFrameworkElement drawingNodeToFrameworkEl = null)
         {
             BindToPanel(panelContainer);

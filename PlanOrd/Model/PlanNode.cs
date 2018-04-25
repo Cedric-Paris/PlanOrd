@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace PlanOrd.Model
 {
     public class PlanNode
     {
         public int Id {get; private set;}
-        public SortedDictionary<int, PlanNode> Father { get; private set; }
+        public string Label { get; set; }
+        public int Duration { get; set; }
+        public SortedDictionary<int, PlanNode> Fathers { get; private set; }
         public SortedDictionary<int, PlanNode> Children { get; private set; }
         //public SortedDictionary<int, PlanNode> CanBeLinkedWith; //en attente de specs
         //notion et carac, utilisation à définir
 
         /// <summary>
-        /// constructeur
+        /// Constructeur
         /// </summary>
+        /// <param name="IdNode">Id du noeud</param>
         public PlanNode(int IdNode)
         {
             this.Id = IdNode;
-            Father = new SortedDictionary<int, PlanNode>();
+            Fathers = new SortedDictionary<int, PlanNode>();
             Children = new SortedDictionary<int, PlanNode>();
         }
 
