@@ -61,7 +61,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\Notion.cs" />
     <Compile Include="Model\Plan.cs" />
+    <Compile Include="Model\PlanGraph.cs" />
+    <Compile Include="Model\PlanNode.cs" />
     <Compile Include="Services\IPlanProvider.cs" />
     <Compile Include="ViewModel\ViewModel.cs" />
     <Compile Include="View\MaquetteWindow.xaml.cs">
