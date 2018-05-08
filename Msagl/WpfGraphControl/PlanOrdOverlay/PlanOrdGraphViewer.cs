@@ -57,7 +57,7 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         /// <param name="e">MouseWheelEventArgs</param>
         protected override void GraphCanvasMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if(ModifierKeys == Drawing.ModifierKeys.Shift)
+            if(ModifierKeys == Drawing.ModifierKeys.Control)
             {
                 base.GraphCanvasMouseWheel(sender, e);
             }
