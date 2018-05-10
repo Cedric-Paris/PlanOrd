@@ -1,5 +1,6 @@
 ﻿using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -36,8 +37,12 @@ namespace PlanOrd.View
         public PlanOrdGraphControl()
         {
             InitializeComponent();
+
             graphViewer = new PlanOrdGraphViewer();
             graphViewer.Initialize(containerDockPanel, verticalScrollBar, horizontalScrollBar, NodeToFrameworkElement);
+            graphViewer.RunLayoutAsync = true;
+            graphViewer.LayoutStarted += LayoutStarted;
+            graphViewer.LayoutComplete += LayoutConplete;
         }
 
         /// <summary>
@@ -51,6 +56,26 @@ namespace PlanOrd.View
 
             //Render graph
             graphViewer.Graph = graph;
+        }
+
+        /// <summary>
+        /// Appelee quand le layout du graphe commence
+        /// </summary>
+        /// <param name="sender">Inutilise</param>
+        /// <param name="e">Inutilise</param>
+        private void LayoutStarted(object sender, EventArgs e)
+        {
+            renderingMessage.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Appelee quand le layout du graphe est termine
+        /// </summary>
+        /// <param name="sender">Inutilise</param>
+        /// <param name="e">Inutilise</param>
+        private void LayoutConplete(object sender, EventArgs e)
+        {
+            renderingMessage.Visibility = Visibility.Hidden;
         }
 
         private PlanNodeView NodeToFrameworkElement(Node node)

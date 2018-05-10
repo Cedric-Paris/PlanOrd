@@ -68,6 +68,9 @@
     <Compile Include="Services\IPlanProvider.cs" />
     <Compile Include="Services\JsonPlanProvider.cs" />
     <Compile Include="ViewModel\ViewModel.cs" />
+    <Compile Include="View\MainWindowLeftPanel.xaml.cs">
+      <DependentUpon>MainWindowLeftPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MaquetteWindow.xaml.cs">
       <DependentUpon>MaquetteWindow.xaml</DependentUpon>
     </Compile>
@@ -79,6 +82,9 @@
     </Compile>
     <Compile Include="View\Resources\BadgeText.xaml.cs">
       <DependentUpon>BadgeText.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Resources\IntSpinner.xaml.cs">
+      <DependentUpon>IntSpinner.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Resources\LoadingControl.xaml.cs">
       <DependentUpon>LoadingControl.xaml</DependentUpon>
@@ -95,6 +101,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\MainWindowLeftPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MaquetteWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -108,6 +118,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Resources\BadgeText.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Resources\IntSpinner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

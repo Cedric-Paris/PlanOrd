@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PlanOrd.View"
+             xmlns:resources="clr-namespace:PlanOrd.View.Resources"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300" Loaded="GraphControlLoaded">
     <UserControl.Resources>
@@ -12,12 +13,14 @@
             <Setter Property="Foreground" Value="#FF3B4045"/>
             <Setter Property="FontFamily" Value=".\Resources\#Segoe MDL2 Assets"/>
             <Setter Property="Background" Value="#FFFAFAFB"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Margin" Value="0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#FFD2DBDB"/>
+            <Setter Property="Margin" Value="2"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border Padding="8"
+                                CornerRadius="50"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 Background="{TemplateBinding Background}"
                                 Margin="{TemplateBinding Margin}"
@@ -54,9 +57,7 @@
                    SmallChange="17"/>
         <Border Grid.Column="0"
                 VerticalAlignment="Top"
-                HorizontalAlignment="Left"
-                BorderBrush="#FFDBDBDB"
-                BorderThickness="1">
+                HorizontalAlignment="Left">
             <StackPanel Orientation="Horizontal">
                 <Button Click="ZoomIn" Content="&#xE12E;"/>
                 <Button Click="ZoomOut" Content="&#xE1A4;"/>
@@ -67,5 +68,37 @@
         <ScrollBar x:Name="horizontalScrollBar" Grid.Row="1"
                    Orientation="Horizontal"
                    SmallChange="17"/>
+        <Grid x:Name="renderingMessage"
+              Background="Transparent"
+              Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Rectangle Grid.Row="1" Grid.Column="1"
+                       Fill="White">
+                <Rectangle.Effect>
+                    <DropShadowEffect BlurRadius="15" Opacity="0.4" ShadowDepth="0"/>
+                </Rectangle.Effect>
+            </Rectangle>
+            <Border Grid.Row="1" Grid.Column="1"
+                    Padding="50,15"
+                    BorderThickness="2"
+                    BorderBrush="#FF1883D7"
+                    Background="WhiteSmoke">
+                <StackPanel>
+                    <resources:LoadingControl Width="50" Margin="0,0,0,10"/>
+                    <TextBlock Text="Rendering graph"
+                               FontSize="13"
+                               FontWeight="SemiBold"/>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

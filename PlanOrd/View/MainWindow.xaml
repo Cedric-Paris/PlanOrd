@@ -81,6 +81,8 @@
         </Border>
 
         <!--Contenu-->
+        <local:MainWindowLeftPanel Grid.Column="0" Grid.Row="1"/>
+        
         <local:PlanOrdGraphControl Grid.Column="1" Grid.Row="1" Panel.ZIndex="-500"/>
 
         

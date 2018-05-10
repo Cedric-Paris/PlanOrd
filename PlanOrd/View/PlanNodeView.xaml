@@ -15,9 +15,9 @@
             ScaleY="0.5"
         />
         </WrapPanel.LayoutTransform>
-        <viewres:BadgeText Background="Red" Foreground="White" Text="12"/>
-        <viewres:BadgeText Background="Blue" Foreground="White" Text="12"/>
-        <viewres:BadgeText Background="Green" Foreground="White" Text="12"/>
+        <viewres:BadgeText Background="Red" Foreground="White" Text="10"/>
+        <viewres:BadgeText Background="Blue" Foreground="White" Text="3"/>
+        <viewres:BadgeText Background="Green" Foreground="White" Text="5"/>
     </WrapPanel>
     <TextBlock x:Name="labelTextBlock" Text="Label temporaire (->binding)" FontSize="12"/>
 </DockPanel>
