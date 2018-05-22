@@ -5,7 +5,7 @@
         HorizontalAlignment="Center"
         CornerRadius="30"
         MinWidth="26"
-        Height="26"
+        MinHeight="26"
         x:Name="RootBorder">
     <TextBlock Margin="1,0,1,0"
                HorizontalAlignment="Center"

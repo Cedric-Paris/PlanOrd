@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using PlanOrd.View;
+using PlanOrd.ViewModel;
+using PlanOrd.Services;
 
 namespace PlanOrd
 {
@@ -10,8 +12,14 @@ namespace PlanOrd
     {
         private void Start(object sender, StartupEventArgs e)
         {
-            var wnd = new MaquetteWindow();
+            IPlanProvider provider = new JsonPlanProvider(new PlanOrdConnection());
+
+            var viewModel = new MainWindowViewModel(provider);
+            var wnd = new MainWindow();
+            wnd.DataContext = viewModel;
             wnd.Show();
+
+            viewModel.LaunchPlanRetrievingAsync();
         }
 
     }

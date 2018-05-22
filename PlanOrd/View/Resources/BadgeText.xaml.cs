@@ -9,11 +9,13 @@ namespace PlanOrd.View.Resources
     /// </summary>
     public partial class BadgeText : Border
     {
+        #region Static fields and methods
         public static readonly DependencyProperty ForegroundProperty =
             DependencyProperty.Register("Foreground", typeof(Brush), typeof(BadgeText), new UIPropertyMetadata(new SolidColorBrush(Colors.Black)));
 
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text", typeof(string), typeof(BadgeText), null);
+        #endregion
 
         /// <summary>
         /// Obtient ou définit le System.Windows.Media.Brush a appliquer au contenu textuel du badge

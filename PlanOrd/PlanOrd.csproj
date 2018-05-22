@@ -61,15 +61,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\Notion.cs" />
     <Compile Include="Model\Plan.cs" />
     <Compile Include="Model\PlanGraph.cs" />
     <Compile Include="Model\PlanNode.cs" />
     <Compile Include="Services\IPlanProvider.cs" />
     <Compile Include="Services\JsonPlanProvider.cs" />
+    <Compile Include="Services\PlanOrdConnection.cs" />
+    <Compile Include="ViewModel\CriteriaViewModel.cs" />
+    <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\PlanNodeViewModel.cs" />
     <Compile Include="ViewModel\ViewModel.cs" />
     <Compile Include="View\MainWindowLeftPanel.xaml.cs">
       <DependentUpon>MainWindowLeftPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MainWindowRightPanel.xaml.cs">
+      <DependentUpon>MainWindowRightPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MaquetteWindow.xaml.cs">
       <DependentUpon>MaquetteWindow.xaml</DependentUpon>
@@ -105,6 +111,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\MainWindowRightPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MaquetteWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,7 +139,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Resources\PlanOrdMenuBarButton.xaml">
+    <Page Include="View\Resources\PlanOrdButtonStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Resources\PlanOrdCheckBoxStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

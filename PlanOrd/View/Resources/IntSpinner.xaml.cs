@@ -9,6 +9,7 @@ namespace PlanOrd.View.Resources
     /// </summary>
     public partial class IntSpinner : Border
     {
+        #region Static fields and methods
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(int), typeof(IntSpinner), new PropertyMetadata(0, ValueChangedCallback));
 
@@ -16,6 +17,7 @@ namespace PlanOrd.View.Resources
         {
             ((IntSpinner)obj).IntTextBox.Text = e.NewValue.ToString();
         }
+        #endregion
 
         /// <summary>
         /// Obtient ou definit la valeur entiere actuelle dans le spinner

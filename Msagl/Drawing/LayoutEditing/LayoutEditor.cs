@@ -32,6 +32,7 @@ namespace Microsoft.Msagl.Drawing {
 
         readonly Set<IViewerObject> dragGroup = new Set<IViewerObject>();
         public IList<IViewerObject> ObjectsSelectedForDrag { get { return new List<IViewerObject>(dragGroup); } }
+        public event EventHandler ObjectsSelectedForDragChanged;
 
         readonly GeometryGraphEditor geomGraphEditor = new GeometryGraphEditor();
         Graph graph;
@@ -257,6 +258,8 @@ namespace Microsoft.Msagl.Drawing {
             ActiveDraggedObject = null;
             decoratorRemovalsDict.Clear();
             dragGroup.Clear();
+            if (ObjectsSelectedForDragChanged != null)
+                ObjectsSelectedForDragChanged(this, EventArgs.Empty);
             CleanObstacles();
         }
 
@@ -566,6 +569,8 @@ namespace Microsoft.Msagl.Drawing {
             if (obj.MarkedForDragging == false) {
                 obj.MarkedForDragging = true;
                 dragGroup.Insert(obj);
+                if (ObjectsSelectedForDragChanged != null)
+                    ObjectsSelectedForDragChanged(this, EventArgs.Empty);
                 DecorateObjectForDragging(obj);
             }
         }
@@ -573,6 +578,8 @@ namespace Microsoft.Msagl.Drawing {
         public void UnselectObjectForDragging(IViewerObject obj) {
             UnselectWithoutRemovingFromDragGroup(obj);
             dragGroup.Remove(obj);
+            if (ObjectsSelectedForDragChanged != null)
+                ObjectsSelectedForDragChanged(this, EventArgs.Empty);
         }
 
         void UnselectWithoutRemovingFromDragGroup(IViewerObject obj) {
@@ -586,6 +593,8 @@ namespace Microsoft.Msagl.Drawing {
                 UnselectWithoutRemovingFromDragGroup(obj);
             }
             dragGroup.Clear();
+            if (ObjectsSelectedForDragChanged != null)
+                ObjectsSelectedForDragChanged(this, EventArgs.Empty);
             UnselectEdge();
         }
 

@@ -1,14 +1,12 @@
 ﻿using PlanOrd.Model;
-using System;
+using System.Threading.Tasks;
 
 namespace PlanOrd.Services
 {
     public interface IPlanProvider
     {
-        Plan Plan { get; }
+        Task<Plan> GetPlanAsync();
 
-        event EventHandler PlanReady;
-
-        void CreatePlanFromString(string value);
+        Task ReplanAsync();
     }
 }

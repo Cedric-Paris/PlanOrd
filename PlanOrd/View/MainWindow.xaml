@@ -30,7 +30,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/PlanOrdMenuBarButton.xaml" />
+                <ResourceDictionary Source="Resources/PlanOrdButtonStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -83,8 +83,12 @@
         <!--Contenu-->
         <local:MainWindowLeftPanel Grid.Column="0" Grid.Row="1"/>
         
-        <local:PlanOrdGraphControl Grid.Column="1" Grid.Row="1" Panel.ZIndex="-500"/>
+        <local:PlanOrdGraphControl Grid.Column="1" Grid.Row="1"
+                                   Graph="{Binding MsaglGraph, Mode=OneWay}"
+                                   SelectedId="{Binding SelectedIdAsString, Mode=TwoWay}"
+                                   Panel.ZIndex="-500"/>
 
+        <local:MainWindowRightPanel Grid.Column="2" Grid.Row="1"/>
         
     </Grid>
 </Window>

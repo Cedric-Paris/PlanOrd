@@ -3,7 +3,7 @@
 namespace PlanOrd.View
 {
     /// <summary>
-    /// Logique d'interaction pour PlanNodeView.xaml
+    /// Representation graphique d'un noeud du plan
     /// </summary>
     public partial class PlanNodeView : DockPanel
     {

@@ -31,7 +31,8 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/PlanOrdMenuBarButton.xaml" />
+                <ResourceDictionary Source="Resources/PlanOrdButtonStyles.xaml" />
+                <ResourceDictionary Source="Resources/PlanOrdCheckBoxStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -198,7 +199,7 @@
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="0" Margin="10,10,7,3" Padding="5,0,0,7" BorderThickness="0,0,0,1" Background="Transparent" BorderBrush="#FFB4C8CF">
-                    <TextBlock Text="Caractéristiques" FontSize="14" FontWeight="Bold"/>
+                    <TextBlock Text="Critères" FontSize="14" FontWeight="Bold"/>
                 </Border>
                 <StackPanel Grid.Row="1">
                     <StackPanel.Resources>
@@ -208,11 +209,16 @@
                             <Setter Property="Background" Value="White"/>
                             <Setter Property="BorderThickness" Value="4,0,0,0"/>
                             <Setter Property="CornerRadius" Value="3"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="BorderThickness" Value="4,1,1,1"/>
+                                </Trigger>
+                            </Style.Triggers>
                         </Style>
                     </StackPanel.Resources>
-                    <Border BorderBrush="Blue">
+                    <Border BorderBrush="Blue" BorderThickness="4,1,1,1">
                         <DockPanel>
-                            <resources:IntSpinner DockPanel.Dock="Right" Value="3" MaxWidth="38"/>
+                            <resources:IntSpinner Background="{x:Null}" DockPanel.Dock="Right" Value="3" MaxWidth="38"/>
                             <TextBlock Text="Difficulté"/>
                         </DockPanel>
                     </Border>
@@ -240,14 +246,28 @@
                             <TextBlock Text="Another one"/>
                         </DockPanel>
                     </Border>
+                    
                 </StackPanel>
                 <Border Grid.Row="2" Margin="10,10,7,3" Padding="5,0,0,7" BorderThickness="0,0,0,1" Background="Transparent" BorderBrush="#FFB4C8CF">
-                    <TextBlock Text="Notions" FontSize="14" FontWeight="Bold"/>
+                    <TextBlock Text="Habilités" FontSize="14" FontWeight="Bold"/>
                 </Border>
-                <!--<DockPanel DockPanel.Dock="Bottom" Margin="0,3,3,10">
-                    <Button DockPanel.Dock="Right" Content="Ajouter" FontSize="15" Padding="5"/>
-                    <ComboBox Margin="0,0,3,0"/>
-                </DockPanel>-->
+                <StackPanel Grid.Row="3">
+                    <CheckBox Margin="10,4"
+                              Padding="10"
+                              Style="{StaticResource CheckBoxStyle}" Background="Blue">
+                        <TextBlock Text="Another one"/>
+                    </CheckBox>
+                    <CheckBox Margin="10,4"
+                              Padding="10"
+                              Style="{StaticResource CheckBoxStyle}" Background="Blue">
+                        <TextBlock Text="Another one"/>
+                    </CheckBox>
+                    <CheckBox Margin="10,4"
+                              Padding="10"
+                              Style="{StaticResource CheckBoxStyle}" Background="Blue">
+                        <TextBlock Text="Another onehjkdjf dkjfkd fjkld jfkldjf kldjfkld fjkldjf kldj fkldj fkldj flkdj fkl d jf lkdjf" TextTrimming="CharacterEllipsis"/>
+                    </CheckBox>
+                </StackPanel>
             </Grid>
         </DockPanel>
     </Grid>

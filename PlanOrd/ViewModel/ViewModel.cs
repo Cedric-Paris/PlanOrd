@@ -3,7 +3,10 @@ using System.Runtime.CompilerServices;
 
 namespace PlanOrd.ViewModel
 {
-    public class ViewModel : INotifyPropertyChanged
+    /// <summary>
+    /// Classe de base pour les view modeles
+    /// </summary>
+    public abstract class ViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

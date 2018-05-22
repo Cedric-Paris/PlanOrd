@@ -3,11 +3,11 @@
 namespace PlanOrd.View
 {
     /// <summary>
-    /// Logique d'interaction pour MainWindowLeftPanel.xaml
+    /// Logique d'interaction pour MainWindowRightPanel.xaml
     /// </summary>
-    public partial class MainWindowLeftPanel : DockPanel
+    public partial class MainWindowRightPanel : Grid
     {
-        public MainWindowLeftPanel()
+        public MainWindowRightPanel()
         {
             InitializeComponent();
         }

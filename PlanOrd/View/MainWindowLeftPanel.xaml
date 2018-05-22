@@ -9,103 +9,85 @@
            Background="#FFE1E9EC">
     <!-- Resources -->
     <DockPanel.Resources>
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="#FF499DF4"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="BorderBrush" Value="#FFD2DBDB"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Padding="15"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        Background="{TemplateBinding Background}"
-                                        BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FF76B6F8"/>
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#FF277BD3"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/PlanOrdButtonStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <!-- Template utilise pour les elements de la liste -->
-        <DataTemplate x:Key="ItemTemplate">
-            <Border>
-                <Border.Style>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="Padding" Value="15,10,8,10"/>
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="BorderThickness" Value="10,0,0,0"/>
-                        <Setter Property="BorderBrush" Value="Transparent"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FFC9D7DC"/>
-                                <Setter Property="BorderBrush" Value="#FFB4C8CF"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
+            <!-- Template utilise pour les elements de la liste -->
+            <DataTemplate x:Key="ItemTemplate">
+                <Border>
+                    <Border.Style>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="Padding" Value="15,10,8,10"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="10,0,0,0"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FFC9D7DC"/>
+                                    <Setter Property="BorderBrush" Value="#FFB4C8CF"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
 
-                <TextBlock Text="{Binding Label}"/>
-            </Border>
-        </DataTemplate>
+                    <TextBlock Text="{Binding Label, Mode=OneTime}" TextTrimming="CharacterEllipsis"/>
+                </Border>
+            </DataTemplate>
 
-        <!-- Template utilise sur un item selectionne -->
-        <DataTemplate x:Key="SelectedItemTemplate">
-            <Border Padding="25,10,8,10"
-                    BorderThickness="10,0,0,0"
-                    BorderBrush="#FF394B55"
-                    Background="#FF546C78">
-                <TextBlock Text="{Binding Label}"
-                           Foreground="White"
-                           FontWeight="SemiBold"/>
-            </Border>
-        </DataTemplate>
+            <!-- Template utilise sur un item selectionne -->
+            <DataTemplate x:Key="SelectedItemTemplate">
+                <Border Padding="25,10,8,10"
+                        BorderThickness="10,0,0,0"
+                        BorderBrush="#FF394B55"
+                        Background="#FF546C78">
+                    <TextBlock Text="{Binding Label, Mode=OneTime}"
+                               Foreground="White"
+                               FontWeight="SemiBold"
+                               TextTrimming="CharacterEllipsis"/>
+                </Border>
+            </DataTemplate>
 
-        <Style TargetType="{x:Type ListBoxItem}" x:Key="ItemContainerStyle">
-            <Setter Property="ContentTemplate" Value="{StaticResource ItemTemplate}" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <ContentPresenter/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="ContentTemplate" Value="{StaticResource SelectedItemTemplate}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+            <Style TargetType="{x:Type ListBoxItem}" x:Key="ItemContainerStyle">
+                <Setter Property="ContentTemplate" Value="{StaticResource ItemTemplate}" />
+                <Setter Property="IsHitTestVisible" Value="{Binding IsSelectable}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <ContentPresenter/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="ContentTemplate" Value="{StaticResource SelectedItemTemplate}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
     </DockPanel.Resources>
     
     <!-- Boutons -->
-    <Button DockPanel.Dock="Bottom" Content="Ajouter après" Margin="10,3,10,10" />
-    <Button DockPanel.Dock="Bottom" Content="Ajouter avant" Margin="10,3" />
+    <Button DockPanel.Dock="Bottom" Content="Ajouter après" Margin="10,3,10,10" Style="{StaticResource PrimaryButtonStyle}"/>
+    <Button DockPanel.Dock="Bottom" Content="Ajouter avant" Margin="10,3" Style="{StaticResource PrimaryButtonStyle}"/>
     
     <!-- Liste des taches -->
-    <StackPanel>
-        <Border Margin="10,10,7,3" 
-                Padding="5,0,0,7"
-                BorderThickness="0,0,0,1"
-                BorderBrush="#FFB4C8CF"
-                Background="Transparent">
-            <TextBlock Text="Ajout d'une tâche" FontSize="14" FontWeight="Bold"/>
-        </Border>
-
-        <ListBox Margin="0"
-                 Padding="0"
-                 Background="{x:Null}"
-                 BorderThickness="0"
-                 ItemsSource="{Binding Taches}"
-                 ItemContainerStyle="{StaticResource ItemContainerStyle}"/>
-    </StackPanel>
+    <Border DockPanel.Dock="Top"
+            Margin="10,10,7,3"
+            Padding="5,0,0,7"
+            BorderThickness="0,0,0,1"
+            BorderBrush="#FFB4C8CF"
+            Background="Transparent">
+        <TextBlock Text="Ajout d'une tâche" FontSize="14" FontWeight="Bold"/>
+    </Border>
+    <ListBox Margin="0"
+             Padding="0"
+             Background="{x:Null}"
+             BorderThickness="0"
+             SelectionMode="Multiple"
+             SelectionChanged="ListBox_SelectionChanged"
+             ItemsSource="{Binding NodesNotInPlan}"
+             SelectedItem="{Binding NodeSelectedInAddList}"
+             ItemContainerStyle="{StaticResource ItemContainerStyle}"/>
 </DockPanel>

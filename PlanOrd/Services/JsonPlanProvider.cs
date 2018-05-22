@@ -1,21 +1,36 @@
 ﻿using Newtonsoft.Json;
 using PlanOrd.Model;
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PlanOrd.Services
 {
     public class JsonPlanProvider : IPlanProvider
     {
-        public Plan Plan { get; private set; }
+        private readonly PlanOrdConnection connection;
 
-        public event EventHandler PlanReady;
+        public JsonPlanProvider(PlanOrdConnection connection)
+        {
+            this.connection = connection;
+        }
+
+        public async Task<Plan> GetPlanAsync()
+        {
+            string jsonPlan = await connection.GetPlanAsync();
+            return CreatePlanFromString(jsonPlan);
+        }
+
+        public async Task ReplanAsync()
+        {
+            await connection.GetPlanAsync();
+        }
 
         /// <summary>
         /// Creer un Plan a partir d'une chaine Json et le stocker dans le JsonPlanProvider.
         /// </summary>
         /// <param name="value">Chaine Json representant le plan</param>
-        public void CreatePlanFromString(string value)
+        /// <returns>Plan genere</returns>
+        private Plan CreatePlanFromString(string value)
         {
             var jsonPlan = JsonConvert.DeserializeObject<JsonPlan>(value);
             var plan = new Plan();
@@ -24,24 +39,15 @@ namespace PlanOrd.Services
                 PlanNode pn = new PlanNode(jNode.Id);
                 pn.Duration = jNode.Parameters.Duration;
                 pn.Label = jNode.Parameters.Label;
+                pn.Criterias = jNode.Criteria;
                 plan.Graph.Nodes.Add(jNode.Id, pn);
-
-                foreach(string crit in jNode.Criteria.Keys)
-                {
-                    if (plan.GlobalCharacteristics.ContainsKey(crit))
-                        plan.GlobalCharacteristics[crit] += jNode.Criteria[crit];
-                    else
-                        plan.GlobalCharacteristics.Add(crit, jNode.Criteria[crit]);                       
-                }
             }
             foreach (JsonEdge e in jsonPlan.Edges)
             {
                 plan.Graph.CreateArc(e.SourceId, e.TargetId);
             }
 
-            Plan = plan;
-            if (PlanReady != null)
-                PlanReady(this, EventArgs.Empty);
+            return plan;
         }
     }
 

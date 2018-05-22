@@ -14,7 +14,7 @@ namespace PlanOrdTests
             bool eventRaised = false;
             string json = File.ReadAllText(@"./../../plan.json");
 
-            JsonPlanProvider pp = new JsonPlanProvider();
+            JsonPlanProvider pp = new JsonPlanProvider(null);
             pp.PlanReady += (s, e) => { eventRaised = true; };
             pp.CreatePlanFromString(json);
 

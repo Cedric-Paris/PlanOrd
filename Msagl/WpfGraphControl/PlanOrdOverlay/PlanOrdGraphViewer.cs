@@ -2,6 +2,7 @@
 using Microsoft.Msagl.Drawing;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -27,6 +28,29 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         private bool ajustScroolView = true;
         private double verticalScrollValue = 0;
         private double horizontalScrollValue = 0;
+        private string selectedNodeId;
+
+        /// <summary>
+        /// Se produit lorsque le noeud selectionne dans le viewer change
+        /// </summary>
+        public event EventHandler SelectedNodeChanged;
+
+        /// <summary>
+        /// Id du noeud selectionne dans le viewer (null si aucun)
+        /// </summary>
+        public string SelectedNodeId
+        {
+            get { return selectedNodeId; }
+            private set
+            {
+                if (selectedNodeId != value)
+                {
+                    selectedNodeId = value;
+                    if (SelectedNodeChanged != null)
+                        SelectedNodeChanged(this, EventArgs.Empty);
+                }
+            }
+        }
 
         /// <summary>
         /// Initialize le viewer. Doit être appele avant toute interaction utilisateur
@@ -46,6 +70,16 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
             this.horizontalScrollBar.Scroll += OnScrollChanged;
             ViewChangeEvent += OnViewChange;
             LayoutComplete += OnViewChange;
+            LayoutEditor.ObjectsSelectedForDragChanged += UpdateSelectedNodeId;
+        }
+
+        private void UpdateSelectedNodeId(object sender, EventArgs e)
+        {
+            IViewerNode iViewer = LayoutEditor.ObjectsSelectedForDrag.FirstOrDefault(o => o is IViewerNode) as IViewerNode;
+            if (iViewer != null)
+                SelectedNodeId = iViewer.Node.Id;
+            else
+                SelectedNodeId = null;
         }
 
         /// <summary>
@@ -251,19 +285,48 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
             SetTransform(scale, dx, dy);
         }
 
-        
-        public void SelectNodes(IEnumerable<Node> nodes)//, Drawing.Color SelectedNodeColor)
+        /// <summary>
+        /// Recupere le VNode associe a l'Id passe en parametre
+        /// </summary>
+        /// <param name="id">Id du noeud</param>
+        /// <returns>VNode ou null si aucun</returns>
+        private VNode GetVNodeFromId(string id)
         {
-            UnselectAllNodes();
-            IViewerObject viewerObject;
-            IViewerNode vNode;
-            foreach(Node node in nodes)
+            if (id == null)
+                return null;
+            Node node = Graph.FindNode(id);
+            if (node == null)
+                return null;
+            else
+                return GetVNodeFromNode(node);
+        }
+
+        /// <summary>
+        /// Recupere le VNode associe au Node passe en parametre
+        /// </summary>
+        /// <returns>VNode ou null si aucun</returns>
+        private VNode GetVNodeFromNode(Node node)
+        {
+            IViewerObject iViewer;
+            if (drawingObjectsToIViewerObjects.TryGetValue(node, out iViewer))
+                return iViewer as VNode;
+            else
+                return null;
+        }
+        
+        /// <summary>
+        /// Selectionne le noeud correspondant a l'ID passe en parametre
+        /// </summary>
+        /// <param name="nodeId">ID du noeud</param>
+        public void SelectNode(string nodeId)
+        {
+            if (Graph != null && nodeId != selectedNodeId)
             {
-                if(this.drawingObjectsToIViewerObjects.TryGetValue(node, out viewerObject) && (vNode = viewerObject as IViewerNode) != null)
-                {
-                    //vNode.Node.Attr.Color = SelectedNodeColor;
+                UnselectAllNodes();
+
+                VNode vNode = GetVNodeFromId(nodeId);
+                if (vNode != null)
                     LayoutEditor.SelectObjectForDragging(vNode);
-                }
             }
         }
 
@@ -274,6 +337,34 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         {
             foreach (IViewerNode node in LayoutEditor.ObjectsSelectedForDrag)
                 LayoutEditor.UnselectObjectForDragging(node);
+        }
+
+        /// <summary>
+        /// Change la couleur (contour) du noeud ayant l'ID passe en parametre
+        /// </summary>
+        /// <param name="nodeId">ID du noeud</param>
+        /// <param name="color">Couleur</param>
+        public void SetNodeForeground(string nodeId, Color color)
+        {
+            VNode vNode = GetVNodeFromId(nodeId);
+            if (vNode == null)
+                return;
+            vNode.Node.Attr.Color = new Drawing.Color(color.A, color.R, color.G, color.B);
+            vNode.BoundaryPath.Stroke = new SolidColorBrush(color);
+        }
+
+        /// <summary>
+        /// Change la couleur de fond du noeud ayant l'ID passe en parametre
+        /// </summary>
+        /// <param name="nodeId">ID du noeud</param>
+        /// <param name="color">Couleur</param>
+        public void SetNodeBackground(string nodeId, Color color)
+        {
+            VNode vNode = GetVNodeFromId(nodeId);
+            if (vNode == null)
+                return;
+            vNode.Node.Attr.FillColor = new Drawing.Color(color.A, color.R, color.G, color.B);
+            vNode.BoundaryPath.Fill = new SolidColorBrush(color);
         }
 
         /// <summary>

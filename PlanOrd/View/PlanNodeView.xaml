@@ -6,18 +6,58 @@
            xmlns:viewres="clr-namespace:PlanOrd.View.Resources"
            xmlns:viewmodel="clr-namespace:PlanOrd.ViewModel"
            mc:Ignorable="d"
-           d:DataContext="{d:DesignInstance Type=viewmodel:PlanNodeViewModel, IsDesignTimeCreatable=False}">
-    <WrapPanel DockPanel.Dock="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,-8,0,0">
-        <WrapPanel.LayoutTransform>
+           Opacity="{Binding Opacity, Mode=OneWay}">
+    
+    <!-- Liste de badge pour afficher les criteres du noeud-->
+    <ItemsControl DockPanel.Dock="Top"
+                  Margin="0,-8,0,-2"
+                  HorizontalAlignment="Right"
+                  ItemsSource="{Binding Criterias, Mode=OneTime}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal"/>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <viewres:BadgeText x:Name="Badge" Background="{Binding Brush, Mode=OneTime}" Foreground="White" Text="{Binding Value, Mode=OneTime}">
+                    <viewres:BadgeText.ToolTip>
+                        <TextBlock>
+                            <Run Text="{Binding Name, Mode=OneTime}" FontWeight="Bold"/>
+                            <Run Text=":" FontWeight="Bold"/>
+                            <Run Text="{Binding Value, Mode=OneTime}"/>
+                        </TextBlock>
+                    </viewres:BadgeText.ToolTip>
+                </viewres:BadgeText>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsSelected, Mode=OneWay}" Value="True">
+                        <Setter TargetName="Badge" Property="Width" Value="32"/>
+                        <Setter TargetName="Badge" Property="Height" Value="32"/>
+                        <Setter TargetName="Badge" Property="Margin" Value="0,-6,0,0"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        <ItemsControl.LayoutTransform>
             <ScaleTransform
             CenterX="0" CenterY="0"
-            ScaleX="0.5"
-            ScaleY="0.5"
+            ScaleX="0.4"
+            ScaleY="0.4"
         />
-        </WrapPanel.LayoutTransform>
-        <viewres:BadgeText Background="Red" Foreground="White" Text="10"/>
-        <viewres:BadgeText Background="Blue" Foreground="White" Text="3"/>
-        <viewres:BadgeText Background="Green" Foreground="White" Text="5"/>
-    </WrapPanel>
-    <TextBlock x:Name="labelTextBlock" Text="Label temporaire (->binding)" FontSize="12"/>
+        </ItemsControl.LayoutTransform>
+    </ItemsControl>
+    
+    <!-- Label du noeud-->
+    <TextBlock Text="{Binding Label, Mode=OneTime}" FontSize="12">
+        <TextBlock.Style>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="TextDecorations" Value="{x:Null}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsBanned}" Value="True">
+                        <Setter Property="TextDecorations" Value="Strikethrough"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </TextBlock.Style>
+    </TextBlock>
 </DockPanel>

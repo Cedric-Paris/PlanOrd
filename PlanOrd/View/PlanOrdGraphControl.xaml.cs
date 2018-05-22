@@ -1,5 +1,6 @@
 ﻿using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay;
+using PlanOrd.ViewModel;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,23 +12,46 @@ namespace PlanOrd.View
     /// </summary>
     public partial class PlanOrdGraphControl : UserControl
     {
+        #region Static fields and methods
         public static readonly DependencyProperty GraphProperty =
-            DependencyProperty.Register("Graph", typeof(Graph), typeof(PlanOrdGraphControl), null);
+            DependencyProperty.Register("Graph", typeof(Graph), typeof(PlanOrdGraphControl), new PropertyMetadata(null, GraphChangedCallback));
 
+        public static readonly DependencyProperty SelectedIdProperty =
+            DependencyProperty.Register("SelectedId", typeof(string), typeof(PlanOrdGraphControl), new PropertyMetadata(null, SelectedIdChangedCallback));
+
+        private static void SelectedIdChangedCallback(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            PlanOrdGraphControl instance = (PlanOrdGraphControl)obj;
+            instance.graphViewer.SelectNode(instance.SelectedId);
+        }
+
+        private static void GraphChangedCallback(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            PlanOrdGraphControl instance = (PlanOrdGraphControl)obj;
+            instance.isGraphOutdated = true;
+            instance.DisplayGraph();
+        }
+        #endregion
+
+        /// <summary>
+        /// Graph Msagl affiche par ce control
+        /// </summary>
         public Graph Graph
         {
             get { return (Graph)GetValue(GraphProperty); }
-            set
-            {
-                SetValue(GraphProperty, value);
-                graph = value;
-                isGraphOutdated = true;
-                DisplayGraph();
-            }
+            set { SetValue(GraphProperty, value); }
+        }
+
+        /// <summary>
+        /// Id du noeud selectionne par l'utilisateur
+        /// </summary>
+        public string SelectedId
+        {
+            get { return (string)GetValue(SelectedIdProperty); }
+            set { SetValue(SelectedIdProperty, value); }
         }
 
         private PlanOrdGraphViewer graphViewer;
-        private Graph graph;
         private bool isGraphOutdated = false;
 
 
@@ -43,6 +67,7 @@ namespace PlanOrd.View
             graphViewer.RunLayoutAsync = true;
             graphViewer.LayoutStarted += LayoutStarted;
             graphViewer.LayoutComplete += LayoutConplete;
+            graphViewer.SelectedNodeChanged += (s,e) => { SelectedId = graphViewer.SelectedNodeId; };
         }
 
         /// <summary>
@@ -55,7 +80,7 @@ namespace PlanOrd.View
             isGraphOutdated = false;
 
             //Render graph
-            graphViewer.Graph = graph;
+            graphViewer.Graph = Graph;
         }
 
         /// <summary>
@@ -78,13 +103,20 @@ namespace PlanOrd.View
             renderingMessage.Visibility = Visibility.Hidden;
         }
 
-        private PlanNodeView NodeToFrameworkElement(Node node)
+        /// <summary>
+        /// Cree les objets graphiques a afficher pour un noeud donne
+        /// </summary>
+        /// <param name="node">Noeud a representer graphiquement</param>
+        /// <returns>PlanNodeView</returns>
+        private PlanNodeView NodeToFrameworkElement(Microsoft.Msagl.Drawing.Node node)
         {
-            /*PlanNodeViewModel planNode = node.UserData as PlanNodeViewModel;
-            if (planNode == null)
-                return null;*/
+            if (node.UserData == null)
+                return null;
 
-            var planNodeView = new PlanNodeView(null);
+            if (node.UserData is PlanNodeViewModel)
+                (node.UserData as PlanNodeViewModel).GraphViewer = graphViewer;
+
+            var planNodeView = new PlanNodeView(node.UserData);
             planNodeView.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             planNodeView.Width = planNodeView.DesiredSize.Width;
             planNodeView.Height = planNodeView.DesiredSize.Height;
@@ -102,7 +134,7 @@ namespace PlanOrd.View
                 DisplayGraph();
 
             //-- TEMPORARY --
-            graph = new Graph();
+            /*graph = new Graph();
             //graph.Attr.BackgroundColor = Color.Green;
 
             graph.AddEdge("4244678324", "1", "3306765570");
@@ -128,7 +160,7 @@ namespace PlanOrd.View
             graph.AddEdge("2", "3");
             graph.AddEdge("3", "4");
             graph.AddEdge("4", "5");
-            graphViewer.Graph = graph;
+            graphViewer.Graph = graph;*/
         }
 
         /// <summary>

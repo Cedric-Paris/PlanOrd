@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace PlanOrd.Model
 {
@@ -12,6 +13,15 @@ namespace PlanOrd.Model
         public PlanGraph()
         {
             Nodes = new SortedDictionary<int, PlanNode>();
+        }
+
+        /// <summary>
+        /// Retourne la racine du graphe (la premiere si plusieurs / null si aucune)
+        /// </summary>
+        /// <returns>Noeud racine</returns>
+        public PlanNode GetRoot()
+        {
+            return Nodes.Values.FirstOrDefault(n => !n.Fathers.Any());
         }
 
         /// <summary>

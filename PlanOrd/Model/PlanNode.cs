@@ -10,7 +10,7 @@ namespace PlanOrd.Model
         public SortedDictionary<int, PlanNode> Fathers { get; private set; }
         public SortedDictionary<int, PlanNode> Children { get; private set; }
         //public SortedDictionary<int, PlanNode> CanBeLinkedWith; //en attente de specs
-        //notion et carac, utilisation à définir
+        public Dictionary<string, int> Criterias { get; set; }
 
         /// <summary>
         /// Constructeur
@@ -22,6 +22,5 @@ namespace PlanOrd.Model
             Fathers = new SortedDictionary<int, PlanNode>();
             Children = new SortedDictionary<int, PlanNode>();
         }
-
     }
 }

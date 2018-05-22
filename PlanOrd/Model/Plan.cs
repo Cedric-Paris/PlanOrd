@@ -7,9 +7,6 @@ namespace PlanOrd.Model
         public PlanGraph Graph { get; private set; }
         public SortedDictionary<int, PlanNode> EventsNotInPlan { get; private set; }
 
-        public List<Notion> Notions { get; private set; }
-        public Dictionary<string, int> GlobalCharacteristics { get; private set; }
-
         /// <summary>
         /// constructeur
         /// </summary>
@@ -17,8 +14,6 @@ namespace PlanOrd.Model
         {
             Graph = new PlanGraph();
             EventsNotInPlan = new SortedDictionary<int, PlanNode>();
-            Notions = new List<Notion>();
-            GlobalCharacteristics = new Dictionary<string, int>();
         }
 
         /// <summary>
