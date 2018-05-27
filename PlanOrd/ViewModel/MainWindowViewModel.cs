@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace PlanOrd.ViewModel
 {
     public class MainWindowViewModel : ViewModel
     {
+        #region Fields and properties
         private IPlanProvider planProvider;
         private Plan plan;
         private Graph msaglGraph;
@@ -19,6 +21,10 @@ namespace PlanOrd.ViewModel
         private PlanNodeViewModel nodeSelectedInAddList;
         private IList<CriteriaViewModel> criterias;
         private CriteriaViewModel selectedCriteria;
+        private bool addBeforeButtonEnabled = false;
+        private bool addAfterButtonEnabled = false;
+        private Visibility banVisibility = Visibility.Collapsed;
+        private Visibility unbanVisibility = Visibility.Collapsed;
 
         /// <summary>
         /// Representation Msagl du plan
@@ -43,6 +49,7 @@ namespace PlanOrd.ViewModel
             set
             {
                 selectedIdAsString = value;
+                OnNodeSelected();
                 OnPropertyChanged("SelectedIdAsString");
             }
         }
@@ -69,6 +76,7 @@ namespace PlanOrd.ViewModel
             set
             {
                 nodeSelectedInAddList = value;
+                OnNodesNotInPlanSelected();
                 OnPropertyChanged("NodeSelectedInAddList");
             }
         }
@@ -95,11 +103,71 @@ namespace PlanOrd.ViewModel
             set
             {
                 selectedCriteria = value;
-                foreach (var n in nodeViewModels)
-                    n.Value.SelectedCriteriaName = selectedCriteria == null ? null : selectedCriteria.Name;
+                OnCriteriaSelected();
                 OnPropertyChanged("SelectedCriteria");
             }
         }
+
+        /// <summary>
+        /// Indique si le bouton d'ajout "avant" est active dans l'interface
+        /// </summary>
+        public bool AddBeforeButtonEnabled
+        {
+            get { return addBeforeButtonEnabled; }
+            set
+            {
+                addBeforeButtonEnabled = value;
+                OnPropertyChanged("AddBeforeButtonEnabled");
+            }
+        }
+
+        public ButtonCommand AddBeforeCommand { get { return new ButtonCommand(AddBefore); } }
+
+        /// <summary>
+        /// Indique si le bouton d'ajout "apres" est active dans l'interface
+        /// </summary>
+        public bool AddAfterButtonEnabled
+        {
+            get { return addAfterButtonEnabled; }
+            set
+            {
+                addAfterButtonEnabled = value;
+                OnPropertyChanged("AddAfterButtonEnabled");
+            }
+        }
+
+        public ButtonCommand AddAfterCommand { get { return new ButtonCommand(AddAfter); } }
+
+        /// <summary>
+        /// Visibilite du bouton 'Bannir' dans l'interface
+        /// </summary>
+        public Visibility BanVisibility
+        {
+            get { return banVisibility; }
+            set
+            {
+                banVisibility = value;
+                OnPropertyChanged("BanVisibility");
+            }
+        }
+
+        public ButtonCommand BanCommand { get { return new ButtonCommand(Ban); } }
+
+        /// <summary>
+        /// Visibilite du bouton 'Debannir' dans l'interface
+        /// </summary>
+        public Visibility UnbanVisibility
+        {
+            get { return unbanVisibility; }
+            set
+            {
+                unbanVisibility = value;
+                OnPropertyChanged("UnbanVisibility");
+            }
+        }
+
+        public ButtonCommand UnbanCommand { get { return new ButtonCommand(Unban); } }
+        #endregion
 
         /// <summary>
         /// Constructeur
@@ -112,10 +180,19 @@ namespace PlanOrd.ViewModel
         }
 
         /// <summary>
-        /// Lance la recuperation d'un plan aupres du provideur
+        /// Lance la reception du premier plan
         /// </summary>
         /// <returns>Task (methode asynchrone)</returns>
-        public async Task LaunchPlanRetrievingAsync()
+        public async void Init()
+        {
+            await LaunchPlanRetrievingAsync();
+        }
+
+        /// <summary>
+        /// Lance la recuperation d'un plan aupres du provider
+        /// </summary>
+        /// <returns>Task (methode asynchrone)</returns>
+        private async Task LaunchPlanRetrievingAsync()
         {
             this.plan = await planProvider.GetPlanAsync();
             UpdateMsaglGraphAndViewModelProperties();
@@ -127,9 +204,9 @@ namespace PlanOrd.ViewModel
         private void UpdateMsaglGraphAndViewModelProperties()
         {
             nodeViewModels.Clear();
-            NodesNotInPlan = new ObservableCollection<PlanNodeViewModel>(plan.EventsNotInPlan.Select(n => new PlanNodeViewModel(n.Value)));
+            NodesNotInPlan = new ObservableCollection<PlanNodeViewModel>(plan.ManualEvents.Select(n => new PlanNodeViewModel(n.Value)));
             NodeSelectedInAddList = null;
-            Criterias = new List<CriteriaViewModel>(plan.Graph.Nodes[2].Criterias.Select(c=>new CriteriaViewModel(c.Key, c.Value)));
+            Criterias = new List<CriteriaViewModel>(plan.PlanCriterias.Select(c=>new CriteriaViewModel(c.Key, c.Value)));
             SelectedCriteria = null;
 
             Graph mgraph = new Graph();
@@ -141,13 +218,168 @@ namespace PlanOrd.ViewModel
                     PlanNodeViewModel viewModel = new PlanNodeViewModel(pNode);
                     nodeViewModels.Add(viewModel.Id, viewModel);
 
-                    mgraph.AddNode(pNode.Id.ToString()).UserData = viewModel;
+                    Node n = mgraph.AddNode(pNode.Id.ToString());
+                    n.UserData = viewModel;
+                    n.Attr.LineWidth = 1.5;
                     foreach (var fils in pNode.Children)
                         mgraph.AddEdge(viewModel.Id.ToString(), fils.Key.ToString());
                 }
             }
 
             MsaglGraph = mgraph;
+        }
+        
+        /// <summary>
+        /// Met a jour la liste des events pour mettre en avant ceux qui peuvent etre lies avec le noeud selectionne
+        /// </summary>
+        private void OnNodeSelected()
+        {
+            PlanNodeViewModel selectedNode = SelectedIdAsString == null ? null : nodeViewModels[int.Parse(SelectedIdAsString)];
+            if(selectedNode != null && !selectedNode.IsActive)
+            {
+                NodeSelectedInAddList = null;
+            }
+
+            //Mise en avant des taches pouvant être liees au noeud selectionne
+            foreach(PlanNodeViewModel manualEvent in NodesNotInPlan)
+            {
+                manualEvent.IsActive = selectedNode == null
+                                       || manualEvent.Node.AllowedPredecessors.Contains(selectedNode.Id)
+                                       || manualEvent.Node.AllowedPredecessors.Contains(selectedNode.Id);
+            }
+
+            UpdateAddButtonState();
+            UpdateBanButtonsState();
+        }
+
+        /// <summary>
+        /// Met a jour les view models des noeuds pour mettre en avant ceux qui peuvent etre lies avec l'event selectionne
+        /// </summary>
+        private void OnNodesNotInPlanSelected()
+        {
+            foreach (var viewModel in nodeViewModels)
+            {
+                if (nodeSelectedInAddList == null || nodeSelectedInAddList.Node.AllowedPredecessors.Contains(viewModel.Value.Id)
+                                                  || nodeSelectedInAddList.Node.AllowedSuccessors.Contains(viewModel.Value.Id))
+                    viewModel.Value.IsActive = true;
+                else
+                    viewModel.Value.IsActive = false;
+            }
+
+            UpdateAddButtonState();
+        }
+
+        /// <summary>
+        /// Activation / Desactivation des boutons d'ajout de tache
+        /// </summary>
+        private void UpdateAddButtonState()
+        {
+            if (nodeSelectedInAddList == null || SelectedIdAsString == null)
+            {
+                AddBeforeButtonEnabled = false;
+                AddAfterButtonEnabled = false;
+            }
+            else
+            {
+                AddBeforeButtonEnabled = nodeSelectedInAddList.Node.AllowedSuccessors.Contains(int.Parse(SelectedIdAsString));
+                AddAfterButtonEnabled = nodeSelectedInAddList.Node.AllowedPredecessors.Contains(int.Parse(SelectedIdAsString));
+            }
+        }
+
+        private void UpdateBanButtonsState()
+        {
+            int id;
+            if(int.TryParse(SelectedIdAsString, out id) && id != 0)
+            {
+                if(nodeViewModels[id].IsBanned)
+                {
+                    BanVisibility = Visibility.Collapsed;
+                    UnbanVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    BanVisibility = Visibility.Visible;
+                    UnbanVisibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                BanVisibility = Visibility.Collapsed;
+                UnbanVisibility = Visibility.Collapsed;
+            }
+        }
+
+        /// <summary>
+        /// Met a jour les view models des noeuds avec le nom du critere selectionne
+        /// </summary>
+        private void OnCriteriaSelected()
+        {
+            foreach (var n in nodeViewModels)
+                n.Value.SelectedCriteriaName = selectedCriteria == null ? null : selectedCriteria.Name;
+        }
+
+        /// <summary>
+        /// Ajoute l'event selectionne comme pere du noeud selectionne
+        /// </summary>
+        private void AddBefore()
+        {
+            int childId;
+            int newId = plan.Graph.Nodes.Min(n => n.Value.Id) - 1;
+            if (!int.TryParse(SelectedIdAsString, out childId))
+                return;
+            // Creation et ajout du noeud
+            PlanNode newNode = new PlanNode(newId);
+            newNode.Label = NodeSelectedInAddList.Label;
+            newNode.Duration = NodeSelectedInAddList.Node.Duration;
+            newNode.Criterias = NodeSelectedInAddList.Node.Criterias;
+            plan.Graph.Nodes.Add(newNode.Id, newNode);
+            plan.Graph.CreateArc(childId, newNode.Id);
+
+            UpdateMsaglGraphAndViewModelProperties();
+        }
+
+        /// <summary>
+        /// Ajoute l'event selectionne comme fils du noeud selectionne
+        /// </summary>
+        private void AddAfter()
+        {
+            int fatherId;
+            int newId = plan.Graph.Nodes.Min(n => n.Value.Id) - 1;
+            if (!int.TryParse(SelectedIdAsString, out fatherId))
+                return;
+            // Creation et ajout du noeud
+            PlanNode newNode = new PlanNode(newId);
+            newNode.Label = NodeSelectedInAddList.Label;
+            newNode.Duration = NodeSelectedInAddList.Node.Duration;
+            newNode.Criterias = NodeSelectedInAddList.Node.Criterias;
+            plan.Graph.Nodes.Add(newNode.Id, newNode);
+            plan.Graph.CreateArc(fatherId, newNode.Id);
+
+            UpdateMsaglGraphAndViewModelProperties();
+        }
+
+        /// <summary>
+        /// Banni le noeud selectionne
+        /// </summary>
+        private void Ban()
+        {
+            int id;
+            if (int.TryParse(SelectedIdAsString, out id))
+                nodeViewModels[id].IsBanned = true;
+
+            UpdateBanButtonsState();
+        }
+
+        /// <summary>
+        /// Debanni le noeud selectionne
+        /// </summary>
+        private void Unban()
+        {
+            int id;
+            if (int.TryParse(SelectedIdAsString, out id))
+                nodeViewModels[id].IsBanned = false;
+
+            UpdateBanButtonsState();
         }
     }
 }

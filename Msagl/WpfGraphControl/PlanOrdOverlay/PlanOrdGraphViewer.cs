@@ -1,7 +1,6 @@
 ﻿using Microsoft.Msagl.Core.Geometry;
 using Microsoft.Msagl.Drawing;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -61,6 +60,7 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         /// <param name="drawingNodeToFrameworkEl">Delegate permettant de convertir un Drawing.Node en objet graphique Wpf</param>
         public void Initialize(Panel panelContainer, ScrollBar verticalScrollBar, ScrollBar horizontalScrollBar, DrawingNodeToFrameworkElement drawingNodeToFrameworkEl = null)
         {
+            LayoutEditingEnabled = false;
             BindToPanel(panelContainer);
             DrawingNodeToFrameworkEl = drawingNodeToFrameworkEl;
             this.verticalScrollBar = verticalScrollBar;
@@ -80,6 +80,33 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
                 SelectedNodeId = iViewer.Node.Id;
             else
                 SelectedNodeId = null;
+        }
+
+        /// <summary>
+        /// Appele quand un bouton de la souris est relache. Gere la selection / deselection
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            if (e is MouseButtonEventArgs && (e as MouseButtonEventArgs).ChangedButton == MouseButton.Left)
+            {
+                IViewerObject obj = ObjectUnderMouseCursor;
+                if (obj == null || !(obj is IViewerNode))
+                    UnselectAllNodes();
+                else
+                {
+                    if((obj as IViewerNode).MarkedForDragging)
+                    {
+                        UnselectAllNodes();
+                    }
+                    else
+                    {
+                        LayoutEditor.SelectObjectForDragging(obj);
+                        foreach (IViewerObject o in LayoutEditor.ObjectsSelectedForDrag)
+                            if (o != obj) LayoutEditor.UnselectObjectForDragging(o);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -335,8 +362,7 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         /// </summary>
         public void UnselectAllNodes()
         {
-            foreach (IViewerNode node in LayoutEditor.ObjectsSelectedForDrag)
-                LayoutEditor.UnselectObjectForDragging(node);
+            LayoutEditor.UnselectEverything();
         }
 
         /// <summary>

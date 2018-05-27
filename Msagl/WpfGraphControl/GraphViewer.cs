@@ -538,7 +538,7 @@ namespace Microsoft.Msagl.WpfGraphControl {
             }
         }
 
-        void OnMouseUp(MouseEventArgs e) {
+        protected virtual void OnMouseUp(MouseEventArgs e) {
             if (MouseUp != null)
                 MouseUp(this, CreateMouseEventArgs(e));
         }

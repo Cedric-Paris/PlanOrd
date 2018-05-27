@@ -15,7 +15,6 @@ namespace PlanOrd.ViewModel
         private static readonly Color defaultBackground = Colors.White;
         private const double inactiveNodeOpacity = 0.3;
 
-        private PlanNode node;
         private bool isActive;
         private bool isBanned;
         private string selectedCriteriaName;
@@ -24,9 +23,11 @@ namespace PlanOrd.ViewModel
         private double opacity;
 
 
-        public int Id { get { return node.Id; } }
+        public int Id { get { return Node.Id; } }
 
-        public string Label { get { return node.Label; } }
+        public string Label { get { return Node.Label; } }
+
+        public PlanNode Node { get; private set; }
 
         /// <summary>
         /// Le graphViewer dans lequel ce node est affiche. (null si non affiche)
@@ -108,15 +109,18 @@ namespace PlanOrd.ViewModel
         /// <param name="node">Node du modele</param>
         public PlanNodeViewModel(PlanNode node)
         {
-            this.node = node;
+            Node = node;
             isActive = true;
             opacity = 1;
             foregroundColor = defaultForeground;
             backgroundColor = defaultBackground;
 
             Criterias = new List<CriteriaViewModel>();
-            foreach(var crit in node.Criterias)
-                Criterias.Add(new CriteriaViewModel(crit.Key, crit.Value));
+            if (node.Criterias != null)
+            {
+                foreach (var crit in node.Criterias)
+                    Criterias.Add(new CriteriaViewModel(crit.Key, crit.Value));
+            }
         }
 
         /// <summary>

@@ -17,19 +17,29 @@ namespace PlanOrd.Services
             /*HttpResponseMessage m = await client.GetAsync('http://localhost/plan.json');
             return await m.Content.ReadAsStringAsync();*/
             string b = await Task.Run(() => { return @"{
-
-    'nodes': [{
+	'manual_events': [{
+		'duration': 10,
+		'label': 'event1',
+		'predecessor': [1, 2],
+		'status': 'notstarted'
+	}, {
+		'duration': 20,
+		'label': 'Event2',
+		'predecessor': [4],
+		'status': 'notstarted'
+	}],
+	'nodes': [{
 		'v': 0,
 		'criteria': {},
 		'params': {
 			'controlled': true,
 			'delay': 0,
 			'label': 'Start',
-			'status': 'notstarted'
+			'state': 'notstarted'
 		}
 	}, {
 		'v': 1,
-		'criteria': {'Another one': 4},
+		'criteria': {},
 		'params': {
 			'controlled': false,
 			'duration': 1,
@@ -39,10 +49,7 @@ namespace PlanOrd.Services
 	}, {
 		'v': 2,
 		'criteria': {
-			'difficulty': 1,
-            'Criticity': 5,
-            'Another one': 10,
-            'Another': 8
+			'difficulty': 1
 		},
 		'params': {
 			'controlled': false,
@@ -77,6 +84,13 @@ namespace PlanOrd.Services
 			'label': 'EvacuateVictims()',
 			'status': 'notstarted'
 		}
+	}],
+	'habilites': [{
+		'nodes': [1, 2, 3],
+		'name': 'Communication'
+	}, {
+		'nodes': [3, 4],
+		'name': 'Leadership'
 	}],
 	'edges': [{
 		'v': 0,

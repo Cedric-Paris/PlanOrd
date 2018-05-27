@@ -48,16 +48,16 @@
             </Style>
 
             <!-- Style utilise pour les habilites dans la liste -->
-            <Style TargetType="{x:Type ListBoxItem}" x:Key="HabilityItemStyle">
-                <Setter Property="Template">
+            <Style TargetType="{x:Type ContentPresenter}" x:Key="HabilityItemStyle">
+                <Setter Property="ContentTemplate">
                     <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <DataTemplate>
                             <CheckBox Margin="10,4"
                                       Padding="10"
                                       Style="{StaticResource CheckBoxStyle}">
-                                <TextBlock Text="HABILITE" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding Key}" TextTrimming="CharacterEllipsis"/>
                             </CheckBox>
-                        </ControlTemplate>
+                        </DataTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -104,7 +104,7 @@
     </Border>
     <ItemsControl Grid.Row="3"
                   Margin="0"
-                  Padding="0"
+                  Padding="0,5,0,0"
                   Background="{x:Null}"
                   BorderThickness="0"
                   ItemsSource="{Binding Habilities, Mode=OneWay}"

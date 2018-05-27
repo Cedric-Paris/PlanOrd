@@ -7,10 +7,12 @@ namespace PlanOrd.Model
         public int Id {get; private set;}
         public string Label { get; set; }
         public int Duration { get; set; }
+        public bool IsBanned { get; set; }
         public SortedDictionary<int, PlanNode> Fathers { get; private set; }
         public SortedDictionary<int, PlanNode> Children { get; private set; }
-        //public SortedDictionary<int, PlanNode> CanBeLinkedWith; //en attente de specs
         public Dictionary<string, int> Criterias { get; set; }
+        public List<int> AllowedPredecessors { get; set; }
+        public List<int> AllowedSuccessors { get; set; }
 
         /// <summary>
         /// Constructeur
@@ -19,6 +21,7 @@ namespace PlanOrd.Model
         public PlanNode(int IdNode)
         {
             this.Id = IdNode;
+            IsBanned = false;
             Fathers = new SortedDictionary<int, PlanNode>();
             Children = new SortedDictionary<int, PlanNode>();
         }

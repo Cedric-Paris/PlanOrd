@@ -19,7 +19,7 @@ namespace PlanOrd
             wnd.DataContext = viewModel;
             wnd.Show();
 
-            viewModel.LaunchPlanRetrievingAsync();
+            viewModel.Init();
         }
 
     }

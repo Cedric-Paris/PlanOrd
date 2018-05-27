@@ -587,7 +587,7 @@ namespace Microsoft.Msagl.Drawing {
             RemoveObjDraggingDecorations(obj);
         }
 
-        void UnselectEverything() {
+        public void UnselectEverything() {
             foreach (IViewerObject obj in dragGroup) {
                 viewer.Invalidate(obj);
                 UnselectWithoutRemovingFromDragGroup(obj);

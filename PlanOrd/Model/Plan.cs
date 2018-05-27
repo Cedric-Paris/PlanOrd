@@ -5,7 +5,9 @@ namespace PlanOrd.Model
     public class Plan
     {
         public PlanGraph Graph { get; private set; }
-        public SortedDictionary<int, PlanNode> EventsNotInPlan { get; private set; }
+        public SortedDictionary<int, PlanNode> ManualEvents { get; private set; }
+        public SortedDictionary<string, List<int>> Habilities { get; private set; }
+        public SortedDictionary<string, int> PlanCriterias { get; private set;}
 
         /// <summary>
         /// constructeur
@@ -13,54 +15,29 @@ namespace PlanOrd.Model
         public Plan()
         {
             Graph = new PlanGraph();
-            EventsNotInPlan = new SortedDictionary<int, PlanNode>();
+            ManualEvents = new SortedDictionary<int, PlanNode>();
+            Habilities = new SortedDictionary<string, List<int>>();
+            PlanCriterias = new SortedDictionary<string, int>();
         }
 
         /// <summary>
-        /// met à jour la liste des caractéristiques du plan avec la valeur associée
-        /// cette liste des caractéristiques dépend des caractéristiques de chaque notion ajouté
-        /// la valeur d'une caractéristique du plan est la somme des valeurs de cette caractérisque pour chaque notion
+        /// Met à jour la liste des critere du plan
+        /// La valeur d'un critere du plan est la somme des valeurs de ce critere pour chaque noeud
         /// </summary>
-       /* public void UpdateGlobalCharacteristics()
+        public void UpdatePlanCriterias()
         {
-            //reset du dictionnaire actuel
-            this.GlobalCharacteristics.Clear();
+            PlanCriterias.Clear();
 
-            //récupération de la liste des noms des caractéristiuques
-            HashSet<string> CaracString = new HashSet<string>();
-            foreach (Notion n in this.Notions)
+            foreach(PlanNode node in Graph.Nodes.Values)
             {
-                foreach (KeyValuePair<string, int> charac in n.Characteristics)
+                foreach(var critPair in node.Criterias)
                 {
-                    CaracString.Add(charac.Key);
+                    if (PlanCriterias.ContainsKey(critPair.Key))
+                        PlanCriterias[critPair.Key] += critPair.Value;
+                    else
+                        PlanCriterias.Add(critPair.Key, critPair.Value);
                 }
             }
-
-            //récupération de la valeur globale des caractéristiques de chaque notion
-            foreach (string cs in CaracString)
-            {
-                foreach (Notion n in this.Notions)
-                {
-                    foreach (KeyValuePair<string, int> charac in n.Characteristics)
-                    {
-                        if (cs.Equals(charac.Key))
-                        {
-                            if (this.GlobalCharacteristics.ContainsKey(cs) == false)
-                            {
-                                //on ajoute la caractéristique la première fois
-                                this.GlobalCharacteristics.Add(cs, charac.Value);
-                            }
-                            else
-                            {
-                                //on met ensuite à jour la valeur de la caractéristique pour les autres fois afin de faire la somme
-                                this.GlobalCharacteristics[cs] = this.GlobalCharacteristics[cs] + charac.Value;
-                            }
-
-                        }
-                    }
-
-                }
-            }
-        }*/
+        }
     }
 }
