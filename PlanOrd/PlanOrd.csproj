@@ -69,9 +69,13 @@
     <Compile Include="Services\PlanOrdConnection.cs" />
     <Compile Include="ViewModel\ButtonCommand.cs" />
     <Compile Include="ViewModel\CriteriaViewModel.cs" />
+    <Compile Include="ViewModel\AbilityViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\PlanNodeViewModel.cs" />
     <Compile Include="ViewModel\ViewModel.cs" />
+    <Compile Include="View\GraphComparisonWindow.xaml.cs">
+      <DependentUpon>GraphComparisonWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MainWindowLeftPanel.xaml.cs">
       <DependentUpon>MainWindowLeftPanel.xaml</DependentUpon>
     </Compile>
@@ -96,6 +100,10 @@
     <Compile Include="View\Resources\LoadingControl.xaml.cs">
       <DependentUpon>LoadingControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\GraphComparisonWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

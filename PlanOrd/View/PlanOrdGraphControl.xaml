@@ -51,7 +51,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <DockPanel x:Name="containerDockPanel" Grid.Column="0"/>
+        <DockPanel x:Name="containerDockPanel" Grid.Column="0" ClipToBounds="True"/>
         <ScrollBar x:Name="verticalScrollBar" Grid.Column="1"
                    Orientation="Vertical"
                    SmallChange="17"/>

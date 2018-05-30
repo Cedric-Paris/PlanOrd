@@ -58,9 +58,9 @@ namespace PlanOrd.Services
                 pn.AllowedSuccessors = mEvent.Successor ?? new List<int>();
                 plan.ManualEvents.Add(pn.Id, pn);
             }
-            foreach (Hability h in jsonPlan.Habilities)
+            foreach (JsonAbility h in jsonPlan.Abilities)
             {
-                plan.Habilities.Add(h.Name, h.Nodes);
+                plan.Abilities.Add(h.Name, h.Nodes);
             }
 
             plan.UpdatePlanCriterias();
@@ -79,7 +79,7 @@ namespace PlanOrd.Services
         [JsonProperty(PropertyName = "manual_events")]
         public List<ManualEvent> ManualEvents { get; set; }
         [JsonProperty(PropertyName = "habilites")]
-        public List<Hability> Habilities { get; set; }
+        public List<JsonAbility> Abilities { get; set; }
     }
 
     internal class JsonNode
@@ -109,7 +109,7 @@ namespace PlanOrd.Services
         public string Status { get; set; }
     }
 
-    internal class Hability
+    internal class JsonAbility
     {
         public string Name { get; set; }
         public List<int> Nodes { get; set; }

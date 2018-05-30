@@ -145,6 +145,8 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         /// <param name="e">Inutilise</param>
         private void OnScrollChanged(object sender, EventArgs e)
         {
+            if (Graph == null)
+                return;
             ajustScroolView = false;
             SetTransform(CurrentScale, CurrentXOffset - (horizontalScrollBar.Value - horizontalScrollValue), CurrentYOffset - (verticalScrollBar.Value - verticalScrollValue));
             verticalScrollValue = verticalScrollBar.Value;
@@ -255,7 +257,7 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         /// </summary>
         public void ZoomInCanvas()
         {
-            if (panelContainer == null)
+            if (Graph == null || panelContainer == null)
                 return;
             WpfPoint canvasCenter = GetRelativeCanvasCenter();
             ZoomAbout(1.0 / ZoomPower * ZoomFactor, canvasCenter);
@@ -266,7 +268,7 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         /// </summary>
         public void ZoomOutCanvas()
         {
-            if (panelContainer == null)
+            if (Graph == null || panelContainer == null)
                 return;
             WpfPoint canvasCenter = GetRelativeCanvasCenter();
             ZoomAbout(ZoomPower * ZoomFactor, canvasCenter);
@@ -277,7 +279,7 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         /// </summary>
         public void FitGraphToView()
         {
-            if (GeomGraph == null)
+            if (Graph == null)
                 return;
 
             var scale = Math.Min(GraphCanvas.RenderSize.Width / GeomGraph.Width, GraphCanvas.RenderSize.Height / GeomGraph.Height);
@@ -296,6 +298,9 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         /// </summary>
         public void FitGraphWidthToViewAndGoTop()
         {
+            if (Graph == null)
+                return;
+
             var customBoundingBox = new Rectangle(GeomGraph.BoundingBox.LeftTop, GeomGraph.BoundingBox.RightBottom);
             customBoundingBox.Height = 2;
             var graphCenter = customBoundingBox.Center;

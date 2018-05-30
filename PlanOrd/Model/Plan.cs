@@ -6,7 +6,7 @@ namespace PlanOrd.Model
     {
         public PlanGraph Graph { get; private set; }
         public SortedDictionary<int, PlanNode> ManualEvents { get; private set; }
-        public SortedDictionary<string, List<int>> Habilities { get; private set; }
+        public SortedDictionary<string, List<int>> Abilities { get; private set; }
         public SortedDictionary<string, int> PlanCriterias { get; private set;}
 
         /// <summary>
@@ -16,7 +16,7 @@ namespace PlanOrd.Model
         {
             Graph = new PlanGraph();
             ManualEvents = new SortedDictionary<int, PlanNode>();
-            Habilities = new SortedDictionary<string, List<int>>();
+            Abilities = new SortedDictionary<string, List<int>>();
             PlanCriterias = new SortedDictionary<string, int>();
         }
 

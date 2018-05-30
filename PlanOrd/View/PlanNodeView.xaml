@@ -6,7 +6,8 @@
            xmlns:viewres="clr-namespace:PlanOrd.View.Resources"
            xmlns:viewmodel="clr-namespace:PlanOrd.ViewModel"
            mc:Ignorable="d"
-           Opacity="{Binding Opacity, Mode=OneWay}">
+           Opacity="{Binding Opacity, Mode=OneWay}"
+           Margin="2,0,2,2">
     
     <!-- Liste de badge pour afficher les criteres du noeud-->
     <ItemsControl DockPanel.Dock="Top"

@@ -48,20 +48,31 @@
             </Style>
 
             <!-- Style utilise pour les habilites dans la liste -->
-            <Style TargetType="{x:Type ContentPresenter}" x:Key="HabilityItemStyle">
-                <Setter Property="ContentTemplate">
+            <Style TargetType="{x:Type ListBoxItem}" x:Key="AbilityItemStyle">
+                <Setter Property="Template">
                     <Setter.Value>
-                        <DataTemplate>
-                            <CheckBox Margin="10,4"
-                                      Padding="10"
-                                      Style="{StaticResource CheckBoxStyle}">
-                                <TextBlock Text="{Binding Key}" TextTrimming="CharacterEllipsis"/>
-                            </CheckBox>
-                        </DataTemplate>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <DockPanel x:Name="ItemDockPanel">
+                                <CheckBox DockPanel.Dock="Left"
+                                          Margin="4,0,0,0"
+                                          IsChecked="{Binding IsEnabled}"
+                                          Style="{StaticResource CheckBoxStyle}"/>
+                                <TextBlock Margin="10" Text="{Binding Name, Mode=OneTime}" TextTrimming="CharacterEllipsis"/>
+                            </DockPanel>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger SourceName="ItemDockPanel" Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="ItemDockPanel" Property="Background" Value="#FFC9D7DC"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="ItemDockPanel" Property="Background" Value="#FFB4C8CF"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
-
+            
         </ResourceDictionary>
     </Grid.Resources>
     
@@ -102,13 +113,17 @@
             Background="Transparent">
         <TextBlock Text="Habilités" FontSize="14" FontWeight="Bold"/>
     </Border>
-    <ItemsControl Grid.Row="3"
-                  Margin="0"
-                  Padding="0,5,0,0"
-                  Background="{x:Null}"
-                  BorderThickness="0"
-                  ItemsSource="{Binding Habilities, Mode=OneWay}"
-                  ItemContainerStyle="{StaticResource HabilityItemStyle}"/>
+    <ListBox Grid.Row="3"
+             Margin="0"
+             Padding="0,5,0,0"
+             Background="{x:Null}"
+             BorderThickness="0"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+             SelectionMode="Multiple"
+             SelectionChanged="ListBox_SelectionChanged"
+             ItemsSource="{Binding Abilities, Mode=OneWay}"
+             SelectedItem="{Binding SelectedAbility}"
+             ItemContainerStyle="{StaticResource AbilityItemStyle}"/>
 
     <!-- Bouton Replan -->
     <Button Grid.Row="4"  Content="Replan" Margin="10" Style="{StaticResource PrimaryButtonStyle}"/>

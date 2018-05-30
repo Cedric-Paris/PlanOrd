@@ -90,7 +90,8 @@ namespace PlanOrd.View
         /// <param name="e">Inutilise</param>
         private void LayoutStarted(object sender, EventArgs e)
         {
-            renderingMessage.Visibility = Visibility.Visible;
+            if(graphViewer.Graph != null)
+                renderingMessage.Visibility = Visibility.Visible;
         }
 
         /// <summary>
@@ -132,35 +133,6 @@ namespace PlanOrd.View
         {
             if (isGraphOutdated)
                 DisplayGraph();
-
-            //-- TEMPORARY --
-            /*graph = new Graph();
-            //graph.Attr.BackgroundColor = Color.Green;
-
-            graph.AddEdge("4244678324", "1", "3306765570");
-            graph.AddEdge("3306765570", "2", "3306795361");
-            graph.AddEdge("3306765570", "3", "4165284267");
-            graph.AddEdge("4165284267", "4", "2357829804");
-            graph.AddEdge("4165284267", "5", "2357829804");
-            graph.AddEdge("4165284267", "6", "4165808555");
-            graph.AddEdge("4165808555", "7", "2358354092");
-            graph.AddEdge("2357829804", "8", "3037888174");
-            graph.AddEdge("2357829804", "9", "3037888174");
-            graph.AddEdge("3037888174", "10", "3037888174");
-            graph.AddEdge("2357829804", "11", "3057232447");
-            graph.AddEdge("3057232447", "12", "4383314829");
-            graph.AddEdge("4383314829", "13", "3538842958");
-            graph.AddEdge("3538842958", "14", "5039186655");
-            graph.AddEdge("2357829804", "15", "3057232447");
-            graph.AddEdge("3057232447", "16", "4383314829");
-            graph.AddEdge("4383314829", "17", "1777291275");
-            graph.AddEdge("3037888174", "18", "4769343948");
-            graph.AddEdge("4769343948", "1");
-            graph.AddEdge("1", "2");
-            graph.AddEdge("2", "3");
-            graph.AddEdge("3", "4");
-            graph.AddEdge("4", "5");
-            graphViewer.Graph = graph;*/
         }
 
         /// <summary>

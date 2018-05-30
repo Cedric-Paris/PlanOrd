@@ -11,16 +11,17 @@ namespace PlanOrd.ViewModel
     /// </summary>
     public class PlanNodeViewModel : ViewModel
     {
-        private static readonly Color defaultForeground = Colors.Black;
-        private static readonly Color defaultBackground = Colors.White;
         private const double inactiveNodeOpacity = 0.3;
+        private static readonly Color defaultForeground = Colors.Black;
+        public static readonly Color DefaultBackground = Colors.White;
+        public static readonly Color AbilitySelectedBackground = Colors.LightGray;
 
+        private PlanOrdGraphViewer graphViewer;
         private bool isActive;
-        private bool isBanned;
         private string selectedCriteriaName;
+        private double opacity;
         private Color foregroundColor;
         private Color backgroundColor;
-        private double opacity;
 
 
         public int Id { get { return Node.Id; } }
@@ -49,7 +50,7 @@ namespace PlanOrd.ViewModel
             {
                 isActive = value;
                 OnPropertyChanged("IsActive");
-                Opacity = isBanned || !isActive ? inactiveNodeOpacity : 1;
+                Opacity = IsBanned || !isActive ? inactiveNodeOpacity : 1;
             }
         }
         /// <summary>
@@ -57,12 +58,12 @@ namespace PlanOrd.ViewModel
         /// </summary>
         public bool IsBanned
         {
-            get { return isBanned; }
+            get { return Node.IsBanned; }
             set
             {
-                isBanned = value;
+                Node.IsBanned = value;
                 OnPropertyChanged("IsBanned");
-                Opacity = isBanned || !isActive ? inactiveNodeOpacity : 1;
+                Opacity = IsBanned || !isActive ? inactiveNodeOpacity : 1;
             }
         }
 
@@ -84,6 +85,32 @@ namespace PlanOrd.ViewModel
         }
 
         public IList<CriteriaViewModel> Criterias { get; private set; }
+
+        /// <summary>
+        /// Couleur du noeud (text et contour)
+        /// </summary>
+        public Color ForegroundColor
+        {
+            get { return foregroundColor; }
+            private set
+            {
+                foregroundColor = value;
+                UpdateForegroundBrush();
+            }
+        }
+
+        /// <summary>
+        /// Couleur de fond du noeud
+        /// </summary>
+        public Color BackgroundColor
+        {
+            get { return backgroundColor; }
+            set
+            {
+                backgroundColor = value;
+                UpdateBackgroundBrush();
+            }
+        }
 
         /// <summary>
         /// Opacite du noeud lorsqu'il est affiche (1 = 100%)
@@ -111,9 +138,9 @@ namespace PlanOrd.ViewModel
         {
             Node = node;
             isActive = true;
-            opacity = 1;
+            opacity = Node.IsBanned ? inactiveNodeOpacity : 1;
             foregroundColor = defaultForeground;
-            backgroundColor = defaultBackground;
+            backgroundColor = DefaultBackground;
 
             Criterias = new List<CriteriaViewModel>();
             if (node.Criterias != null)
@@ -137,13 +164,11 @@ namespace PlanOrd.ViewModel
             if (SelectedCriteriaName != null && (crit = Criterias.FirstOrDefault(c => c.Name == SelectedCriteriaName)) != null)
             {
                 crit.IsSelected = true;
-                foregroundColor = crit.Color;
-                UpdateForegroundBrush();
+                ForegroundColor = crit.Color;
             }
-            else if(foregroundColor != defaultForeground)
+            else if(ForegroundColor != defaultForeground)
             {
-                foregroundColor = defaultForeground;
-                UpdateForegroundBrush();
+                ForegroundColor = defaultForeground;
             }
         }
 
@@ -157,9 +182,9 @@ namespace PlanOrd.ViewModel
                 Color c = new Color()
                 {
                     A = (byte)(Opacity * 255),
-                    R = foregroundColor.R,
-                    G = foregroundColor.G,
-                    B = foregroundColor.B,
+                    R = ForegroundColor.R,
+                    G = ForegroundColor.G,
+                    B = ForegroundColor.B,
                 };
                 GraphViewer.SetNodeForeground(Id.ToString(), c);
             }
@@ -175,9 +200,9 @@ namespace PlanOrd.ViewModel
                 Color c = new Color()
                 {
                     A = (byte)(Opacity * 255),
-                    R = backgroundColor.R,
-                    G = backgroundColor.G,
-                    B = backgroundColor.B,
+                    R = BackgroundColor.R,
+                    G = BackgroundColor.G,
+                    B = BackgroundColor.B,
                 };
                 GraphViewer.SetNodeBackground(Id.ToString(), c);
             }

@@ -21,6 +21,8 @@ namespace PlanOrd.ViewModel
         private PlanNodeViewModel nodeSelectedInAddList;
         private IList<CriteriaViewModel> criterias;
         private CriteriaViewModel selectedCriteria;
+        private IList<AbilityViewModel> abilities;
+        private AbilityViewModel selectedAbility;
         private bool addBeforeButtonEnabled = false;
         private bool addAfterButtonEnabled = false;
         private Visibility banVisibility = Visibility.Collapsed;
@@ -105,6 +107,34 @@ namespace PlanOrd.ViewModel
                 selectedCriteria = value;
                 OnCriteriaSelected();
                 OnPropertyChanged("SelectedCriteria");
+            }
+        }
+
+        /// <summary>
+        /// Liste des habilites
+        /// </summary>
+        public IList<AbilityViewModel> Abilities
+        {
+            get { return abilities; }
+            set
+            {
+                abilities = value;
+                OnPropertyChanged("Abilities");
+            }
+        }
+
+        /// <summary>
+        /// Habilite selectionne dans l'interface (liste de droite)
+        /// </summary>
+        public AbilityViewModel SelectedAbility
+        {
+            get { return selectedAbility; }
+            set
+            {
+                AbilityViewModel last = selectedAbility;
+                selectedAbility = value;
+                OnAbilitySelected(last);
+                OnPropertyChanged("SelectedAbility");
             }
         }
 
@@ -206,7 +236,8 @@ namespace PlanOrd.ViewModel
             nodeViewModels.Clear();
             NodesNotInPlan = new ObservableCollection<PlanNodeViewModel>(plan.ManualEvents.Select(n => new PlanNodeViewModel(n.Value)));
             NodeSelectedInAddList = null;
-            Criterias = new List<CriteriaViewModel>(plan.PlanCriterias.Select(c=>new CriteriaViewModel(c.Key, c.Value)));
+            Criterias = new List<CriteriaViewModel>(plan.PlanCriterias.Select(c => new CriteriaViewModel(c.Key, c.Value)));
+            Abilities = new List<AbilityViewModel>(plan.Abilities.Select(h => new AbilityViewModel(h.Key, h.Value)));
             SelectedCriteria = null;
 
             Graph mgraph = new Graph();
@@ -219,6 +250,10 @@ namespace PlanOrd.ViewModel
                     nodeViewModels.Add(viewModel.Id, viewModel);
 
                     Node n = mgraph.AddNode(pNode.Id.ToString());
+                    var foreground = viewModel.ForegroundColor;
+                    var background = viewModel.BackgroundColor;
+                    n.Attr.Color = new Color((byte)(viewModel.Opacity * 255), foreground.R, foreground.G, foreground.B);
+                    n.Attr.FillColor = new Color((byte)(viewModel.Opacity * 255), background.R, background.G, background.B);
                     n.UserData = viewModel;
                     n.Attr.LineWidth = 1.5;
                     foreach (var fils in pNode.Children)
@@ -316,6 +351,31 @@ namespace PlanOrd.ViewModel
         {
             foreach (var n in nodeViewModels)
                 n.Value.SelectedCriteriaName = selectedCriteria == null ? null : selectedCriteria.Name;
+        }
+
+        /// <summary>
+        /// Met a jour les view model des noeuds pour mettre en avant l'habilite selectionnee
+        /// </summary>
+        /// <param name="lastValue">L'habilite selectionnee precedemment</param>
+        private void OnAbilitySelected(AbilityViewModel lastValue = null)
+        {
+            PlanNodeViewModel nodeViewModel;
+            if (lastValue != null)
+            {
+                foreach (int id in lastValue.NodeIds)
+                {
+                    if (nodeViewModels.TryGetValue(id, out nodeViewModel))
+                        nodeViewModel.BackgroundColor = PlanNodeViewModel.DefaultBackground;
+                }
+            }
+            if(SelectedAbility != null)
+            {
+                foreach (int id in SelectedAbility.NodeIds)
+                {
+                    if (nodeViewModels.TryGetValue(id, out nodeViewModel))
+                        nodeViewModels[id].BackgroundColor = PlanNodeViewModel.AbilitySelectedBackground;
+                }
+            }
         }
 
         /// <summary>

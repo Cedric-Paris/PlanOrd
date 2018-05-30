@@ -101,6 +101,7 @@
              Padding="0"
              Background="{x:Null}"
              BorderThickness="0"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
              SelectionMode="Multiple"
              SelectionChanged="ListBox_SelectionChanged"
              ItemsSource="{Binding NodesNotInPlan}"
