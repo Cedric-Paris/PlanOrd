@@ -12,10 +12,12 @@ namespace PlanOrd.ViewModel
     public class PlanNodeViewModel : ViewModel
     {
         private const double inactiveNodeOpacity = 0.3;
-        private static readonly Color defaultForeground = Colors.Black;
+        public static readonly Color DefaultForeground = Colors.Black;
         public static readonly Color DefaultBackground = Colors.White;
         public static readonly Color AbilitySelectedBackground = Colors.LemonChiffon;
+        public static readonly Color RunnedColor = Colors.Green;
 
+        #region Fields and properties
         private PlanOrdGraphViewer graphViewer;
         private bool isActive;
         private string selectedCriteriaName;
@@ -38,7 +40,18 @@ namespace PlanOrd.ViewModel
         /// <summary>
         /// Indique si le noeud a deja ete execute
         /// </summary>
-        public bool IsRunned { get; set; }
+        public bool IsRunned
+        {
+            get { return Node.IsRunned; }
+            set
+            {
+                if(IsRunned != value)
+                {
+                    Node.IsRunned = value;
+                    ForegroundColor = value ? RunnedColor : DefaultForeground;
+                }
+            }
+        }
 
         /// <summary>
         /// Indique si le noeud est actif dans l'interface graphique
@@ -129,6 +142,7 @@ namespace PlanOrd.ViewModel
                 }
             }
         }
+        #endregion
 
         /// <summary>
         /// Constructeur
@@ -139,7 +153,7 @@ namespace PlanOrd.ViewModel
             Node = node;
             isActive = true;
             opacity = Node.IsBanned ? inactiveNodeOpacity : 1;
-            foregroundColor = defaultForeground;
+            foregroundColor = DefaultForeground;
             backgroundColor = DefaultBackground;
 
             Criterias = new List<CriteriaViewModel>();
@@ -166,9 +180,11 @@ namespace PlanOrd.ViewModel
                 crit.IsSelected = true;
                 ForegroundColor = crit.Color;
             }
-            else if(ForegroundColor != defaultForeground)
+            else
             {
-                ForegroundColor = defaultForeground;
+                Color newForeground = IsRunned ? RunnedColor : DefaultForeground;
+                if (ForegroundColor != newForeground)
+                    ForegroundColor = newForeground;
             }
         }
 

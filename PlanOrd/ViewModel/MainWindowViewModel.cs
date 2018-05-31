@@ -139,6 +139,11 @@ namespace PlanOrd.ViewModel
         }
 
         /// <summary>
+        /// Commande executer lorsque l'utilisateur clic sur le bouton 'Lancer la seance'
+        /// </summary>
+        public ButtonCommand RunPlanCommand { get { return new ButtonCommand(RunPlan); } }
+
+        /// <summary>
         /// Indique si le bouton d'ajout "avant" est active dans l'interface
         /// </summary>
         public bool AddBeforeButtonEnabled
@@ -376,6 +381,19 @@ namespace PlanOrd.ViewModel
                         nodeViewModels[id].BackgroundColor = PlanNodeViewModel.AbilitySelectedBackground;
                 }
             }
+        }
+
+        /// <summary>
+        /// Lance l'execution du plan affiche actuellement dans l'interface
+        /// </summary>
+        private void RunPlan()
+        {
+            PlanNodeViewModel startNode;
+            if (!nodeViewModels.TryGetValue(0, out startNode) || startNode.GraphViewer == null)
+                return;
+
+            /*PlanRunner runner = new PlanRunner(startNode.GraphViewer, nodeViewModels, startNode);
+            runner.Start();*/
         }
 
         /// <summary>

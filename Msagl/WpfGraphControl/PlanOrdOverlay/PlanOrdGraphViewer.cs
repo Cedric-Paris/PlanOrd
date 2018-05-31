@@ -401,13 +401,21 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
         /// <summary>
         /// Lance une animation sur un arc du graphe: l'arc passe progressivement de la couleur 'From' a la couleur 'To'
         /// </summary>
-        /// <param name="edge">Reference sur l'arc a animer</param>
+        /// <param name="idSource">Id du noeud source de l'arc a animer</param>
+        /// <param name="idTarget">Id du noeud target de l'arc a animer</param>
         /// <param name="From">Couleur initiale</param>
         /// <param name="To">Couleur en fin d'animation</param>
-        /// <param name="duration">Duree necessaire pour changer la couleur de l'arc</param>
-        /// <param name="colorTarget">Indique si le noeud target de l'arc doit etre colorie a la fin de l'animation</param>
-        public void AnimateEdge(Edge edge, Color From, Color To, double duration, bool colorTarget = true)
+        /// <param name="duration">Duree necessaire pour changer la couleur de l'arc (en seconde)</param>
+        public void AnimateEdge(string idSource, string idTarget, Color From, Color To, double duration)
         {
+            Node node = Graph.FindNode(idSource);
+            if (node == null)
+                return;
+
+            Edge edge = node.OutEdges.FirstOrDefault(e => e.Target == idTarget);
+            if (edge == null)
+                return;
+
             IViewerObject iViewer;
             VEdge edgeToAnim;
             if (!drawingObjectsToIViewerObjects.TryGetValue(edge, out iViewer) || (edgeToAnim = iViewer as VEdge) == null)
@@ -431,9 +439,6 @@ namespace Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay
                 edgeToAnim.CurvePath.Stroke = b;
                 edgeToAnim.TargetArrowHeadPath.Stroke = b;
                 edgeToAnim.TargetArrowHeadPath.Fill = b;
-                VNode node;
-                if (colorTarget && drawingObjectsToIViewerObjects.TryGetValue(edge.TargetNode, out iViewer) && (node = iViewer as VNode) != null)
-                    node.BoundaryPath.Stroke = b;
             };
 
             gStopStart.BeginAnimation(GradientStop.OffsetProperty, animation);

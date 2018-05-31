@@ -99,7 +99,9 @@
                     Visibility="{Binding UnbanVisibility}"
                     Command="{Binding UnbanCommand, Mode=OneTime}"
                     Style="{StaticResource DangerRoundedButtonStyle}"/>
-            <Button Content="Lancer la séance" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource PrimaryRoundedButtonStyle}"/>
+            <Button Content="Lancer la séance" HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Command="{Binding RunPlanCommand}"
+                    Style="{StaticResource PrimaryRoundedButtonStyle}"/>
         </StackPanel>
 
         <local:MainWindowRightPanel Grid.Column="2" Grid.Row="1"/>
