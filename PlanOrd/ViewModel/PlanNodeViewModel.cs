@@ -14,7 +14,7 @@ namespace PlanOrd.ViewModel
         private const double inactiveNodeOpacity = 0.3;
         private static readonly Color defaultForeground = Colors.Black;
         public static readonly Color DefaultBackground = Colors.White;
-        public static readonly Color AbilitySelectedBackground = Colors.LightGray;
+        public static readonly Color AbilitySelectedBackground = Colors.LemonChiffon;
 
         private PlanOrdGraphViewer graphViewer;
         private bool isActive;
