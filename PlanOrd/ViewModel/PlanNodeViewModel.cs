@@ -144,6 +144,8 @@ namespace PlanOrd.ViewModel
         }
         #endregion
 
+        public bool IsRunDone { get; set; }
+
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -152,6 +154,7 @@ namespace PlanOrd.ViewModel
         {
             Node = node;
             isActive = true;
+            IsRunDone = false;
             opacity = Node.IsBanned ? inactiveNodeOpacity : 1;
             foregroundColor = DefaultForeground;
             backgroundColor = DefaultBackground;

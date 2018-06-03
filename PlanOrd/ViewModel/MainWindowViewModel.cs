@@ -392,8 +392,8 @@ namespace PlanOrd.ViewModel
             if (!nodeViewModels.TryGetValue(0, out startNode) || startNode.GraphViewer == null)
                 return;
 
-            /*PlanRunner runner = new PlanRunner(startNode.GraphViewer, nodeViewModels, startNode);
-            runner.Start();*/
+            PlanRunner runner = new PlanRunner(startNode.GraphViewer, nodeViewModels, startNode);
+            runner.Start();
         }
 
         /// <summary>

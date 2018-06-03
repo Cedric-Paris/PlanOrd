@@ -68,6 +68,7 @@
     <Compile Include="Services\JsonPlanProvider.cs" />
     <Compile Include="Services\PlanOrdConnection.cs" />
     <Compile Include="ViewModel\ButtonCommand.cs" />
+    <Compile Include="ViewModel\PlanRunner.cs" />
     <Compile Include="ViewModel\CriteriaViewModel.cs" />
     <Compile Include="ViewModel\AbilityViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
