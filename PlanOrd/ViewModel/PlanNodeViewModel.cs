@@ -54,6 +54,11 @@ namespace PlanOrd.ViewModel
         }
 
         /// <summary>
+        /// Indique si le noeud a fini de runner
+        /// </summary>
+        public bool IsRunDone { get; set; }
+
+        /// <summary>
         /// Indique si le noeud est actif dans l'interface graphique
         /// </summary>
         public bool IsActive
@@ -143,8 +148,6 @@ namespace PlanOrd.ViewModel
             }
         }
         #endregion
-
-        public bool IsRunDone { get; set; }
 
         /// <summary>
         /// Constructeur

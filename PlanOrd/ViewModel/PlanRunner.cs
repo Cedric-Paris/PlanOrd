@@ -1,39 +1,51 @@
-﻿using System;
+﻿using Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PlanOrd.ViewModel
 {
-
+    /// <summary>
+    /// Gere le run du plan
+    /// </summary>
     class PlanRunner
     {
-        public IDictionary<int, PlanNodeViewModel> Nodes { get; private set; }
-        public PlanNodeViewModel StartNode { get; private set; }
-        public Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay.PlanOrdGraphViewer Viewer { get; private set; }
+        private IDictionary<int, PlanNodeViewModel> plaNodes;
+        private PlanNodeViewModel startNode;
+        private PlanOrdGraphViewer viewer;
 
-        public PlanRunner(Microsoft.Msagl.WpfGraphControl.PlanOrdOverlay.PlanOrdGraphViewer viewer, IDictionary<int, PlanNodeViewModel> nodes, PlanNodeViewModel start)
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        /// <param name="viewer">Viewer dans lequel les noeuds sont affiches</param>
+        /// <param name="nodes">Liste des noeuds du plan</param>
+        /// <param name="start">Noeud de depart du plan</param>
+        public PlanRunner(PlanOrdGraphViewer viewer, IDictionary<int, PlanNodeViewModel> nodes, PlanNodeViewModel start)
         {
-            Viewer = viewer;
-            StartNode = start;
-            Nodes = nodes;
-
+            this.viewer = viewer;
+            startNode = start;
+            this.plaNodes = nodes;
         }
 
+        /// <summary>
+        /// Lance le run du plan
+        /// </summary>
         public void Start()
         {
-            RunNode(StartNode);
+            RunNode(startNode);
         }
 
-        public void OnNodeRunDone(PlanNodeViewModel finishedNode)
+        /// <summary>
+        /// Callback quand un noeud a fini de runner
+        /// </summary>
+        /// <param name="finishedNode">ViewModel du noeud qui a fini de runner</param>
+        private void OnNodeRunDone(PlanNodeViewModel finishedNode)
         {
             foreach (int child in finishedNode.Node.Children.Keys)
             {
                 bool launch = true;
                 foreach (int childFather in finishedNode.Node.Children[child].Fathers.Keys)
                 {
-                    if (!Nodes[childFather].IsRunDone)
+                    if (!plaNodes[childFather].IsRunDone)
                     {
                         launch = false;
                         break;
@@ -41,17 +53,22 @@ namespace PlanOrd.ViewModel
                 }
                 if (launch)
                 {
-                    RunNode(Nodes[child]);
+                    RunNode(plaNodes[child]);
                 }
             }
         }
 
-        public async Task RunNode(PlanNodeViewModel node)
+        /// <summary>
+        /// Lance le run du noeud passe en parametre
+        /// </summary>
+        /// <param name="node">ViewModel du noeud a runner</param>
+        /// <returns>Task (methode asynchrone)</returns>
+        private async Task RunNode(PlanNodeViewModel node)
         {
             node.IsRunned = true;
             foreach (int child in node.Node.Children.Keys)
             {
-                Viewer.AnimateEdge(node.Id.ToString(), child.ToString(), PlanNodeViewModel.DefaultForeground, PlanNodeViewModel.RunnedColor, node.Node.Duration);
+                viewer.AnimateEdge(node.Id.ToString(), child.ToString(), PlanNodeViewModel.DefaultForeground, PlanNodeViewModel.RunnedColor, node.Node.Duration);
             }
             await Task.Delay(node.Node.Duration * 1000);
             node.IsRunDone = true;
