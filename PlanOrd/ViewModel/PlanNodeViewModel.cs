@@ -159,7 +159,7 @@ namespace PlanOrd.ViewModel
             isActive = true;
             IsRunDone = false;
             opacity = Node.IsBanned ? inactiveNodeOpacity : 1;
-            foregroundColor = DefaultForeground;
+            foregroundColor = IsRunned ? RunnedColor : DefaultForeground;
             backgroundColor = DefaultBackground;
 
             Criterias = new List<CriteriaViewModel>();

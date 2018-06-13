@@ -55,8 +55,18 @@
                             <DockPanel x:Name="ItemDockPanel">
                                 <CheckBox DockPanel.Dock="Left"
                                           Margin="4,0,0,0"
-                                          IsChecked="{Binding IsEnabled}"
-                                          Style="{StaticResource CheckBoxStyle}"/>
+                                          IsChecked="{Binding IsEnabled}">
+                                    <CheckBox.Style>
+                                        <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource CheckBoxStyle}">
+                                            <Setter Property="ToolTip" Value="Désactiver l'habilité dans le plan"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsChecked" Value="False">
+                                                    <Setter Property="ToolTip" Value="Activer l'habilité dans le plan"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </CheckBox.Style>
+                                </CheckBox>
                                 <TextBlock Margin="10" Text="{Binding Name, Mode=OneTime}" TextTrimming="CharacterEllipsis"/>
                             </DockPanel>
 
@@ -126,6 +136,10 @@
              ItemContainerStyle="{StaticResource AbilityItemStyle}"/>
 
     <!-- Bouton Replan -->
-    <Button Grid.Row="4"  Content="Replan" Margin="10" Style="{StaticResource PrimaryButtonStyle}"/>
+    <Button Grid.Row="4"
+            Margin="10"
+            Content="Replan"
+            Command="{Binding ReplanCommand}"
+            Style="{StaticResource PrimaryButtonStyle}"/>
 
 </Grid>

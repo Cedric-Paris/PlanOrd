@@ -3,17 +3,20 @@
 		"duration": 2,
 		"label": "Nouvelle victime",
 		"predecessor": [1,2],
-		"status": "notstarted",
+    "status": "notstarted",
+    "criteria": {
+			"Difficulté": 1
+		}
 	}, {
 		"duration": 40,
 		"label": "Ambulance retardée",
 		"predecessor": [3],
-		"status": "notstarted",
+		"status": "notstarted"
 	}, {
 		"duration": 10,
 		"label": "Incident lors du transfert des victimes",
 		"predecessor": [8],
-		"status": "notstarted",
+    "status": "notstarted"
 	}],
 	"nodes": [{
 		"v": 0,
@@ -37,7 +40,7 @@
 	}, {
 		"v": 2,
 		"criteria": {
-			"Difficultée": 1
+			"Difficulté": 1
 		},
 		"params": {
 			"controlled": false,
@@ -76,7 +79,7 @@
 		"v": 6,
 		"criteria": {
 			"Criticité": 2,
-			"Difficultée": 1
+			"Difficulté": 1
 		},
 		"params": {
 			"controlled": false,
@@ -87,7 +90,7 @@
 	}, {
 		"v": 7,
 		"criteria": {
-			"Difficultée": 2
+			"Difficulté": 2
 		},
 		"params": {
 			"controlled": false,
@@ -109,7 +112,7 @@
 	}, {
 		"v": 9,
 		"criteria": {
-			"Difficultée": 1
+			"Difficulté": 1
 		},
 		"params": {
 			"controlled": false,
@@ -128,13 +131,13 @@
 		}
 	}],
 	"habilites": [{
-		"nodes": [1, 2, 3, 8],
+		"nodes": [1, 9, 10],
 		"name": "Communication"
 	}, {
 		"nodes": [3, 4, 8],
 		"name": "Leadership"
 	}, {
-		"nodes": [2, 6, 7, 8],
+		"nodes": [2, 6, 7],
 		"name": "Prise de décision"
 	}],
 	"edges": [{

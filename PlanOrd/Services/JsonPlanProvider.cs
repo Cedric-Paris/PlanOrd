@@ -54,6 +54,7 @@ namespace PlanOrd.Services
                 PlanNode pn = new PlanNode(currentId++);
                 pn.Duration = mEvent.Duration;
                 pn.Label = mEvent.Label;
+                pn.Criterias = mEvent.Criteria;
                 pn.AllowedPredecessors = mEvent.Predecessor ?? new List<int>();
                 pn.AllowedSuccessors = mEvent.Successor ?? new List<int>();
                 plan.ManualEvents.Add(pn.Id, pn);
@@ -122,5 +123,6 @@ namespace PlanOrd.Services
         public List<int> Predecessor { get; set; }
         public List<int> Successor { get; set; }
         public string Status { get; set; }
+        public Dictionary<string, int> Criteria { get; set; }
     }
 }

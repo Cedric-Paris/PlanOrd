@@ -23,6 +23,7 @@ namespace PlanOrd.ViewModel
         private CriteriaViewModel selectedCriteria;
         private IList<AbilityViewModel> abilities;
         private AbilityViewModel selectedAbility;
+        private bool isPlanWaitingForRun = true;
         private bool addBeforeButtonEnabled = false;
         private bool addAfterButtonEnabled = false;
         private Visibility banVisibility = Visibility.Collapsed;
@@ -138,10 +139,25 @@ namespace PlanOrd.ViewModel
             }
         }
 
+        public ButtonCommand ReplanCommand { get { return new ButtonCommand(Replan); } }
+
         /// <summary>
         /// Commande executer lorsque l'utilisateur clic sur le bouton 'Lancer la seance'
         /// </summary>
         public ButtonCommand RunPlanCommand { get { return new ButtonCommand(RunPlan); } }
+
+        /// <summary>
+        /// Indique si le run du plan a demarre ou si il est toujours en configuration
+        /// </summary>
+        public bool IsPlanWaitingForRun
+        {
+            get { return isPlanWaitingForRun; }
+            set
+            {
+                isPlanWaitingForRun = value;
+                OnPropertyChanged("IsPlanWaitingForRun");
+            }
+        }
 
         /// <summary>
         /// Indique si le bouton d'ajout "avant" est active dans l'interface
@@ -262,7 +278,12 @@ namespace PlanOrd.ViewModel
                     n.UserData = viewModel;
                     n.Attr.LineWidth = 1.5;
                     foreach (var fils in pNode.Children)
-                        mgraph.AddEdge(viewModel.Id.ToString(), fils.Key.ToString());
+                    {
+                        Edge e = mgraph.AddEdge(viewModel.Id.ToString(), fils.Key.ToString());
+                        e.Attr.LineWidth = 1.4;
+                        if(pNode.IsRunned)
+                            e.Attr.Color = new Color(PlanNodeViewModel.RunnedColor.R, PlanNodeViewModel.RunnedColor.G, PlanNodeViewModel.RunnedColor.B);
+                    }
                 }
             }
 
@@ -383,6 +404,13 @@ namespace PlanOrd.ViewModel
             }
         }
 
+        private void Replan()
+        {
+            /// TEMPORARY Need to be changed when server available
+            Init();
+            IsPlanWaitingForRun = true;
+        }
+
         /// <summary>
         /// Lance l'execution du plan affiche actuellement dans l'interface
         /// </summary>
@@ -394,6 +422,7 @@ namespace PlanOrd.ViewModel
 
             PlanRunner runner = new PlanRunner(startNode.GraphViewer, nodeViewModels, startNode);
             runner.Start();
+            IsPlanWaitingForRun = false;
         }
 
         /// <summary>
@@ -412,6 +441,7 @@ namespace PlanOrd.ViewModel
             newNode.Criterias = NodeSelectedInAddList.Node.Criterias;
             plan.Graph.Nodes.Add(newNode.Id, newNode);
             plan.Graph.CreateArc(childId, newNode.Id);
+            plan.UpdatePlanCriterias();
 
             UpdateMsaglGraphAndViewModelProperties();
         }
@@ -432,6 +462,7 @@ namespace PlanOrd.ViewModel
             newNode.Criterias = NodeSelectedInAddList.Node.Criterias;
             plan.Graph.Nodes.Add(newNode.Id, newNode);
             plan.Graph.CreateArc(fatherId, newNode.Id);
+            plan.UpdatePlanCriterias();
 
             UpdateMsaglGraphAndViewModelProperties();
         }
