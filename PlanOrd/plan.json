@@ -1,14 +1,19 @@
-{
+﻿{
 	"manual_events": [{
-		"duration": 10,
-		"label": "event1",
-		"predecessor": [1, 2],
-		"status": "notstarted"
+		"duration": 2,
+		"label": "Nouvelle victime",
+		"predecessor": [1,2],
+		"status": "notstarted",
 	}, {
-		"duration": 20,
-		"label": "Event2",
-		"predecessor": [4],
-		"status": "notstarted"
+		"duration": 40,
+		"label": "Ambulance retardée",
+		"predecessor": [3],
+		"status": "notstarted",
+	}, {
+		"duration": 10,
+		"label": "Incident lors du transfert des victimes",
+		"predecessor": [8],
+		"status": "notstarted",
 	}],
 	"nodes": [{
 		"v": 0,
@@ -17,7 +22,7 @@
 			"controlled": true,
 			"duration": 1,
 			"delay": 0,
-			"label": "Start",
+			"label": "Début",
 			"state": "notstarted"
 		}
 	}, {
@@ -26,18 +31,18 @@
 		"params": {
 			"controlled": false,
 			"duration": 2,
-			"label": "CallMedivac()",
+			"label": "Appel ambulance",
 			"status": "notstarted"
 		}
 	}, {
 		"v": 2,
 		"criteria": {
-			"difficulty": 1
+			"Difficultée": 1
 		},
 		"params": {
 			"controlled": false,
 			"duration": 2,
-			"label": "add_victim()",
+			"label": "Nouvelle victime",
 			"status": "notstarted"
 		}
 	}, {
@@ -46,7 +51,7 @@
 		"params": {
 			"controlled": true,
 			"duration": 4,
-			"label": "medivac_arriving()",
+			"label": "Ambulance en déplacement",
 			"status": "notstarted"
 		}
 	}, {
@@ -55,7 +60,7 @@
 		"params": {
 			"controlled": false,
 			"duration": 1,
-			"label": "MedivacLands()",
+			"label": "Arrivée de l'ambulance",
 			"status": "notstarted"
 		}
 	}, {
@@ -64,16 +69,73 @@
 		"params": {
 			"controlled": false,
 			"duration": 6,
-			"label": "EvacuateVictims()",
+			"label": "Evacuation des victimes",
+			"status": "notstarted"
+		}
+	}, {
+		"v": 6,
+		"criteria": {
+			"Criticité": 2,
+			"Difficultée": 1
+		},
+		"params": {
+			"controlled": false,
+			"duration": 6,
+			"label": "Détérioration de l'état de la victime",
+			"status": "notstarted"
+		}
+	}, {
+		"v": 7,
+		"criteria": {
+			"Difficultée": 2
+		},
+		"params": {
+			"controlled": false,
+			"duration": 6,
+			"label": "Panne électrocardiographe",
+			"status": "notstarted"
+		}
+	}, {
+		"v": 8,
+		"criteria": {
+			"Criticité": 1
+		},
+		"params": {
+			"controlled": false,
+			"duration": 6,
+			"label": "Transfert des victimes",
+			"status": "notstarted"
+		}
+	}, {
+		"v": 9,
+		"criteria": {
+			"Difficultée": 1
+		},
+		"params": {
+			"controlled": false,
+			"duration": 6,
+			"label": "Perte de communication avec l'ambulance",
+			"status": "notstarted"
+		}
+	}, {
+		"v": 10,
+		"criteria": {},
+		"params": {
+			"controlled": false,
+			"duration": 6,
+			"label": "Reprise de la communication",
 			"status": "notstarted"
 		}
 	}],
 	"habilites": [{
-		"nodes": [1, 2, 3],
+		"nodes": [1, 2, 3, 8],
 		"name": "Communication"
 	}, {
-		"nodes": [3, 4],
+		"nodes": [3, 4, 8],
 		"name": "Leadership"
+	}, {
+		"nodes": [2, 6, 7, 8],
+		"name": "Prise de décision"
 	}],
 	"edges": [{
 		"v": 0,
@@ -86,12 +148,30 @@
 		"w": 3
 	}, {
 		"v": 2,
+		"w": 6
+	}, {
+		"v": 6,
+		"w": 7
+	}, {
+		"v": 7,
 		"w": 4
 	}, {
 		"v": 3,
 		"w": 4
 	}, {
 		"v": 4,
+		"w": 8
+	}, {
+		"v": 8,
 		"w": 5
+	}, {
+		"v": 1,
+		"w": 9
+	}, {
+		"v": 9,
+		"w": 10
+	}, {
+		"v": 10,
+		"w": 4
 	}]
 }
